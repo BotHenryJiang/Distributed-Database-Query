@@ -3,7 +3,54 @@ import random
 import pandas as pd
 import dask.dataframe as dd
 import re
-from database_setup import Node, ShardManager
+from database_setup import ShardManager
+
+# 数据库节点
+class Node:
+    def __init__(self, node_id):
+        self.node_id = node_id
+        self.data = pd.DataFrame(columns=['id', 'data', 'category'])
+        self.ddf = dd.from_pandas(self.data, npartitions=1)
+        # 模拟传输时间（单位：秒），按节点编号递增
+        self.transmission_time_per_unit = 0.001 + 0.001 * node_id
+
+    def load_from_csv(self, filename):
+        self.ddf = dd.read_csv(filename)
+        self.data = self.ddf.compute()
+
+    def save_to_csv(self, filename):
+        self.ddf.to_csv(filename, index=False, single_file=True)
+
+    def query(self, subquery):
+        # 模拟本地执行时间（单位：秒）
+        subqueries = subquery.split(" and ")
+        data_subset = self.data
+        total_execution_time = 0
+
+        for sq in subqueries:
+            initial_size = len(data_subset)
+            if 'id' in sq:
+                complexity_factor = 0.001  # 简单查询的复杂度较低
+            elif 'category' in sq:
+                complexity_factor = 0.003
+            else:
+                complexity_factor = 0.005  # 复杂查询的复杂度较高
+            
+            # 执行子查询
+            data_subset = data_subset.query(sq)
+            filtered_size = len(data_subset)
+            
+            # 计算当前子查询的执行时间
+            execution_time = complexity_factor * initial_size
+            total_execution_time += execution_time
+
+        # 模拟传输时间
+        transmission_time = self.transmission_time_per_unit * len(data_subset)
+
+        # 模拟总查询时间
+        total_time = total_execution_time + transmission_time
+        return total_time
+
 
 # 查询路由器
 class QueryRouter:
@@ -11,7 +58,7 @@ class QueryRouter:
         self.shard_manager = shard_manager
 
     def query(self, query, optimizer):
-        print(f"Original Query: {query}")
+        print(f"\nOriginal Query: {query}")
         optimized_query = optimizer.optimize(query)
         print(f"Optimized Query: {optimized_query}")
         results = []
@@ -30,6 +77,7 @@ class QueryRouter:
         total_simulated_time = sum(query_times)
         print(f"Total Simulated Query Time: {total_simulated_time} seconds")
         return total_results, query_times, total_simulated_time
+
 
 
 # 优化器基类
