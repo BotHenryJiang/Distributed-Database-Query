@@ -5,6 +5,11 @@ import dask.dataframe as dd
 import re
 from database_setup import ShardManager
 
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+
 # 数据库节点
 class Node:
     def __init__(self, node_id):
@@ -59,8 +64,15 @@ class QueryRouter:
 
     def query(self, query, optimizer):
         print(f"\nOriginal Query: {query}")
+        
+        # 记录优化开始时间
+        start_optimization_time = time.time()
         optimized_query = optimizer.optimize(query)
+        # 计算优化时间
+        optimization_time = time.time() - start_optimization_time
+        
         print(f"Optimized Query: {optimized_query}")
+        
         results = []
         query_times = []
         for i, node in enumerate(self.shard_manager.nodes):
@@ -74,16 +86,37 @@ class QueryRouter:
             print(results[-1].head())
         
         total_results = pd.concat(results)
-        total_simulated_time = sum(query_times)
-        print(f"Total Simulated Query Time: {total_simulated_time} seconds")
-        return total_results, query_times, total_simulated_time
-
+        total_query_time = sum(query_times)
+        print(f"Optimization Time: {optimization_time} seconds")
+        print(f"Total Simulated Query Time: {total_query_time} seconds")
+        return total_results, query_times, total_query_time, optimization_time
 
 
 # 优化器基类
 class Optimizer:
+    def __init__(self):
+        pass
+
     def optimize(self, query):
-        raise NotImplementedError
+        raise NotImplementedError("Subclasses should implement this method")
+
+    def calculate_optimization_time(self, query, data_size):
+        query_complexity = len(query.split(" and "))
+        # 假设优化时间与查询复杂度和数据量成正比
+        optimization_time = 0.01 * query_complexity * (data_size / 1000)
+        return optimization_time
+
+
+def evaluate_optimizer(query_router, query, optimizer):
+    results, query_times, total_query_time, optimization_time = query_router.query(query, optimizer)
+    
+    performance_metrics = {
+        "Optimization Time": optimization_time,
+        "Query Execution Time": total_query_time
+    }
+    
+    return performance_metrics
+
 
 # 基于规则的优化器
 class RuleBasedOptimizer(Optimizer):
@@ -188,74 +221,151 @@ class GeneticAlgorithmOptimizer(Optimizer):
         self.all_data = all_data
 
     def optimize(self, query):
-        # 这里是一个简单的遗传算法实现
+        # 解析查询子语句
+        subqueries = query.split(" and ")
         population_size = 10
         generations = 200
         mutation_rate = 0.2  # 增加变异率
 
-        def generate_population(size, base_query):
+        def generate_population(size, subqueries):
             population = []
             for _ in range(size):
-                lower_bound = random.randint(0, 900000)
-                upper_bound = lower_bound + random.randint(10000, 100000)
-                category = random.choice(['A', 'B', 'C', 'D', 'E'])
-                data_condition = "data.str.contains('X')" if random.random() < 0.5 else ""
-                individual_query = f"id >= {lower_bound} and id < {upper_bound} and category == '{category}'"
-                if data_condition:
-                    individual_query += f" and {data_condition}"
-                population.append(individual_query)
+                individual = random.sample(subqueries, len(subqueries))
+                population.append(individual)
             return population
 
         def fitness(individual):
             # 使用查询执行时间作为适应度函数
             try:
+                individual_query = " and ".join(individual)
                 start_time = time.time()
-                result = self.all_data.query(individual)
+                result = self.all_data.query(individual_query)
                 end_time = time.time()
                 execution_time = end_time - start_time
                 return execution_time
             except Exception as e:
-                print(f"Query failed: {individual}, Error: {e}")
+                print(f"Query failed: {' and '.join(individual)}, Error: {e}")
                 return float('inf')  # 如果查询失败，返回一个很大的适应度值
 
         def crossover(parent1, parent2):
             split_point = random.randint(1, len(parent1) - 2)
-            return parent1[:split_point] + parent2[split_point:]
+            child = parent1[:split_point] + [sq for sq in parent2 if sq not in parent1[:split_point]]
+            return child
 
-        def mutate(individual, base_query):
+        def mutate(individual):
             if random.random() < mutation_rate:
-                parts = re.split(r" and ", individual)
-                if len(parts) > 1:
-                    mutation_point = random.randint(0, len(parts) - 1)
-                    lower_bound = random.randint(0, 900000)
-                    upper_bound = lower_bound + random.randint(10000, 100000)
-                    category = random.choice(['A', 'B', 'C', 'D', 'E'])
-                    data_condition = "data.str.contains('X')" if random.random() < 0.5 else ""
-                    new_condition = f"id >= {lower_bound} and id < {upper_bound} and category == '{category}'"
-                    if data_condition:
-                        new_condition += f" and {data_condition}"
-                    parts[mutation_point] = new_condition
-                    return " and ".join(parts)
+                idx1, idx2 = random.sample(range(len(individual)), 2)
+                individual[idx1], individual[idx2] = individual[idx2], individual[idx1]
             return individual
 
-        population = generate_population(population_size, query)
+        population = generate_population(population_size, subqueries)
         for generation in range(generations):
             population = sorted(population, key=fitness)
             next_generation = population[:2]
             for _ in range(population_size - 2):
                 parents = random.sample(population[:5], 2)
                 offspring = crossover(parents[0], parents[1])
-                offspring = mutate(offspring, query)
+                offspring = mutate(offspring)
                 next_generation.append(offspring)
             population = next_generation
 
             # 输出当前最优个体及其适应度
             best_individual = min(population, key=fitness)
             best_fitness = fitness(best_individual)
-            print(f"Generation {generation + 1}: Best Individual = {best_individual}, Fitness = {best_fitness}")
+            print(f"Generation {generation + 1}: Best Individual = {' and '.join(best_individual)}, Fitness = {best_fitness}")
 
         best_individual = min(population, key=fitness)
-        return best_individual
+        return " and ".join(best_individual)
+
+
+#GAN优化器
+class Generator(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(Generator, self).__init__()
+        self.model = nn.Sequential(
+            nn.Linear(input_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, output_dim),
+            nn.Softmax(dim=-1)
+        )
+
+    def forward(self, x):
+        return self.model(x)
+
+class Discriminator(nn.Module):
+    def __init__(self, input_dim):
+        super(Discriminator, self).__init__()
+        self.model = nn.Sequential(
+            nn.Linear(input_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, 1),
+            nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        return self.model(x)
+
+class GANOptimizer(Optimizer):
+    def __init__(self, all_data):
+        self.all_data = all_data
+        self.generator = None
+        self.discriminator = None
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    def optimize(self, query):
+        subqueries = query.split(" and ")
+        input_dim = len(subqueries)
+        output_dim = len(subqueries)
+
+        # 初始化生成器和判别器
+        self.generator = Generator(input_dim, output_dim).to(self.device)
+        self.discriminator = Discriminator(output_dim).to(self.device)
+
+        # 定义优化器
+        g_optimizer = optim.Adam(self.generator.parameters(), lr=0.001)
+        d_optimizer = optim.Adam(self.discriminator.parameters(), lr=0.001)
+
+        # 训练GAN
+        self.train_gan(subqueries, g_optimizer, d_optimizer)
+
+        # 使用训练好的生成器生成优化后的查询顺序
+        optimized_query = self.generate_optimized_query(subqueries)
+
+        return optimized_query
+
+    def train_gan(self, subqueries, g_optimizer, d_optimizer, epochs=1000):
+        for epoch in range(epochs):
+            # 生成器生成查询顺序
+            real_data = torch.FloatTensor([i for i in range(len(subqueries))]).to(self.device)
+            fake_data = self.generator(real_data).detach()
+
+            # 训练判别器
+            d_optimizer.zero_grad()
+            real_output = self.discriminator(real_data)
+            fake_output = self.discriminator(fake_data)
+            d_loss = -torch.mean(torch.log(real_output) + torch.log(1.0 - fake_output))
+            d_loss.backward()
+            d_optimizer.step()
+
+            # 训练生成器
+            g_optimizer.zero_grad()
+            fake_data = self.generator(real_data)
+            fake_output = self.discriminator(fake_data)
+            g_loss = -torch.mean(torch.log(fake_output))
+            g_loss.backward()
+            g_optimizer.step()
+
+            if epoch % 100 == 0:
+                print(f"Epoch {epoch}/{epochs}, D Loss: {d_loss.item()}, G Loss: {g_loss.item()}")
+
+    def generate_optimized_query(self, subqueries):
+        real_data = torch.FloatTensor([i for i in range(len(subqueries))]).to(self.device)
+        with torch.no_grad():
+            optimized_order = self.generator(real_data).cpu().numpy().argsort()
+        optimized_subqueries = [subqueries[i] for i in optimized_order]
+        return " and ".join(optimized_subqueries)
+
+
 
 # 加载节点数据
 nodes = []
@@ -277,7 +387,8 @@ optimizers = {
     "CBO": CostBasedOptimizer(),
     "DP": DynamicProgrammingOptimizer(),
     "GrS": GreedyOptimizer(),
-    "GA": GeneticAlgorithmOptimizer(all_data)  # 传递 all_data 给遗传算法优化器
+    "GA": GeneticAlgorithmOptimizer(all_data), #传递 all_data 给遗传算法优化器
+    "GAN": GANOptimizer(all_data)
 }
 
 # 测试和比较不同优化器的性能
@@ -285,6 +396,5 @@ query = "data.str.contains('X') and data.str.contains('AZ') and data.str.contain
 
 for name, optimizer in optimizers.items():
     print(f"\nRunning {name} Optimizer...")
-    results, query_times, total_simulated_time = query_router.query(query, optimizer)
-    print(f"{name} Total Simulated Query Time: {total_simulated_time} seconds")
-
+    performance_metrics = evaluate_optimizer(query_router, query, optimizer)
+    print(f"{name} Performance Metrics: {performance_metrics}")
