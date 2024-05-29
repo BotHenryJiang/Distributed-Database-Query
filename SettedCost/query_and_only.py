@@ -285,18 +285,19 @@ class Generator(nn.Module):
         self.model = nn.Sequential(
             nn.Linear(input_dim, 128),
             nn.ReLU(),
-            nn.Linear(128, output_dim),
-            nn.Softmax(dim=-1)
+            nn.Linear(128, 256),
+            nn.ReLU(),
+            nn.Linear(256, output_dim)
         )
 
     def forward(self, x):
         return self.model(x)
 
 class Discriminator(nn.Module):
-    def __init__(self, input_dim):
+    def __init__(self, output_dim):
         super(Discriminator, self).__init__()
         self.model = nn.Sequential(
-            nn.Linear(input_dim, 128),
+            nn.Linear(output_dim, 128),
             nn.ReLU(),
             nn.Linear(128, 1),
             nn.Sigmoid()
@@ -322,8 +323,8 @@ class GANOptimizer(Optimizer):
         self.discriminator = Discriminator(output_dim).to(self.device)
 
         # 定义优化器
-        g_optimizer = optim.Adam(self.generator.parameters(), lr=0.001)
-        d_optimizer = optim.Adam(self.discriminator.parameters(), lr=0.001)
+        g_optimizer = optim.Adam(self.generator.parameters(), lr=0.005)
+        d_optimizer = optim.Adam(self.discriminator.parameters(), lr=0.005)
 
         # 训练GAN
         self.train_gan(subqueries, g_optimizer, d_optimizer)
@@ -333,24 +334,26 @@ class GANOptimizer(Optimizer):
 
         return optimized_query
 
-    def train_gan(self, subqueries, g_optimizer, d_optimizer, epochs=1000):
+    def train_gan(self, subqueries, g_optimizer, d_optimizer, epochs=10000):
         for epoch in range(epochs):
             # 生成器生成查询顺序
             real_data = torch.FloatTensor([i for i in range(len(subqueries))]).to(self.device)
-            fake_data = self.generator(real_data).detach()
+            fake_data = self.generator(real_data)
+
+            # 计算生成顺序的代价
+            cost = self.query_cost(fake_data, subqueries)
 
             # 训练判别器
             d_optimizer.zero_grad()
-            real_output = self.discriminator(real_data)
-            fake_output = self.discriminator(fake_data)
-            d_loss = -torch.mean(torch.log(real_output) + torch.log(1.0 - fake_output))
+            fake_output = self.discriminator(cost)
+            d_loss = -torch.mean(torch.log(1.0 - fake_output))
             d_loss.backward()
             d_optimizer.step()
 
             # 训练生成器
             g_optimizer.zero_grad()
             fake_data = self.generator(real_data)
-            fake_output = self.discriminator(fake_data)
+            fake_output = self.discriminator(self.query_cost(fake_data, subqueries))
             g_loss = -torch.mean(torch.log(fake_output))
             g_loss.backward()
             g_optimizer.step()
@@ -358,13 +361,20 @@ class GANOptimizer(Optimizer):
             if epoch % 100 == 0:
                 print(f"Epoch {epoch}/{epochs}, D Loss: {d_loss.item()}, G Loss: {g_loss.item()}")
 
+    def query_cost(self, fake_data, subqueries):
+        # 将张量从计算图中分离出来，防止梯度计算错误
+        indices = fake_data.detach().cpu().numpy().argsort()
+        sorted_subqueries = [subqueries[i] for i in indices]
+        cost = sum(len(sq) for sq in sorted_subqueries)  # 假设代价是查询长度的总和
+        cost_tensor = torch.tensor([cost], dtype=torch.float, device=self.device).expand(1, len(subqueries))
+        return cost_tensor
+
     def generate_optimized_query(self, subqueries):
         real_data = torch.FloatTensor([i for i in range(len(subqueries))]).to(self.device)
         with torch.no_grad():
             optimized_order = self.generator(real_data).cpu().numpy().argsort()
         optimized_subqueries = [subqueries[i] for i in optimized_order]
         return " and ".join(optimized_subqueries)
-
 
 
 # 加载节点数据
@@ -383,16 +393,16 @@ query_router = QueryRouter(shard_manager)
 
 # 定义优化器
 optimizers = {
-    "RBO": RuleBasedOptimizer(),
-    "CBO": CostBasedOptimizer(),
-    "DP": DynamicProgrammingOptimizer(),
-    "GrS": GreedyOptimizer(),
-    "GA": GeneticAlgorithmOptimizer(all_data), #传递 all_data 给遗传算法优化器
+#    "RBO": RuleBasedOptimizer(),
+#    "CBO": CostBasedOptimizer(),
+#    "DP": DynamicProgrammingOptimizer(),
+#    "GrS": GreedyOptimizer(),
+#    "GA": GeneticAlgorithmOptimizer(all_data), #传递 all_data 给遗传算法优化器
     "GAN": GANOptimizer(all_data)
 }
 
 # 测试和比较不同优化器的性能
-query = "categoty == 'B' and data.str.contains('X') and data.str.contains('AZ') and id >=500000 and id<800000 "
+query = " data.str.contains('X') and category == 'B' and data.str.contains('AZ') and id >=500000 and id<800000 "
 
 for name, optimizer in optimizers.items():
     print(f"\nRunning {name} Optimizer...")
