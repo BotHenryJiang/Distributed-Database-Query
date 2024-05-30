@@ -22,19 +22,32 @@ class Node:
 
     def query(self, subquery):
         # 模拟本地执行时间（单位：秒）
-        if 'id' in subquery:
-            local_execution_time = 0.0001
-        elif 'category' in subquery:
-            local_execution_time = 0.0002
-        else:
-            local_execution_time = 0.0003
+        subqueries = subquery.split(" and ")
+        data_subset = self.data
+        total_execution_time = 0
+
+        for sq in subqueries:
+            initial_size = len(data_subset)
+            if 'id' in sq:
+                complexity_factor = 0.001  # 简单查询的复杂度较低
+            elif 'category' in sq:
+                complexity_factor = 0.003
+            else:
+                complexity_factor = 0.005  # 复杂查询的复杂度较高
+            
+            # 执行子查询
+            data_subset = data_subset.query(sq)
+            filtered_size = len(data_subset)
+            
+            # 计算当前子查询的执行时间
+            execution_time = complexity_factor * initial_size
+            total_execution_time += execution_time
 
         # 模拟传输时间
-        num_units = len(self.data)  # 假设每行数据为一个单位
-        transmission_time = self.transmission_time_per_unit * num_units
+        transmission_time = self.transmission_time_per_unit * len(data_subset)
 
         # 模拟总查询时间
-        total_time = local_execution_time + transmission_time
+        total_time = total_execution_time + transmission_time
         return total_time
 
 # 分片管理器

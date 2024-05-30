@@ -9,7 +9,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-
 # 数据库节点
 class Node:
     def __init__(self, node_id):
@@ -89,7 +88,7 @@ class QueryRouter:
         total_query_time = sum(query_times)
         print(f"Optimization Time: {optimization_time} seconds")
         print(f"Total Simulated Query Time: {total_query_time} seconds")
-        return total_results, query_times, total_query_time, optimization_time
+        return total_results, query_times, total_query_time, optimization_time, optimized_query
 
 
 # 优化器基类
@@ -108,16 +107,18 @@ class Optimizer:
 
 
 def evaluate_optimizer(query_router, query, optimizer):
-    results, query_times, total_query_time, optimization_time = query_router.query(query, optimizer)
+    results, query_times, total_query_time, optimization_time, optimized_query = query_router.query(query, optimizer)
     
     performance_metrics = {
         "Optimization Time": optimization_time,
-        "Query Execution Time": total_query_time
+        "Query Execution Time": total_query_time,
+        "Optimized Query": optimized_query
     }
     
     return performance_metrics
 
-#GAN Optimizer
+
+# GAN优化器
 class Generator(nn.Module):
     def __init__(self, input_dim, output_dim, activation_fn):
         super(Generator, self).__init__()
@@ -218,6 +219,7 @@ class GANOptimizer(Optimizer):
         optimized_subqueries = [subqueries[i] for i in optimized_order]
         return " and ".join(optimized_subqueries)
 
+
 # 加载节点数据
 nodes = []
 for i in range(10):
@@ -232,9 +234,8 @@ all_data = pd.concat([node.data for node in nodes])
 shard_manager = ShardManager(nodes)
 query_router = QueryRouter(shard_manager)
 
-
 # 实验设置
-learning_rates = [0.001,0.005, 0.01]
+learning_rates = [0.001, 0.005, 0.01]
 activation_functions = [nn.ReLU, nn.LeakyReLU]
 
 # 定义查询
@@ -243,7 +244,6 @@ query = "data.str.contains('X') and category == 'B' and data.str.contains('AZ') 
 # 存储实验结果
 results = []
 
-# 运行实验
 for lr_g in learning_rates:
     for lr_d in learning_rates:
         for activation_fn in activation_functions:

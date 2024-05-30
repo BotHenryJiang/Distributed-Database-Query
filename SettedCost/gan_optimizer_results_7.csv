@@ -1,0 +1,19 @@
+Optimization Time,Query Execution Time,Optimized Query,Learning Rate G,Learning Rate D,Activation Function
+2.569546937942505,8928.351999999999,data.str.contains('X') and category == 'B' and id >= 500000 and data.str.contains('AZ') and id < 800000,0.001,0.001,ReLU
+1.134044885635376,12076.759,data.str.contains('X') and data.str.contains('AZ') and id < 800000 and category == 'B' and id >= 500000,0.001,0.001,LeakyReLU
+1.1280488967895508,11084.614,data.str.contains('X') and id < 800000 and data.str.contains('AZ') and id >= 500000 and category == 'B',0.001,0.005,ReLU
+1.2268240451812744,7128.314,data.str.contains('AZ') and category == 'B' and id < 800000 and id >= 500000 and data.str.contains('X'),0.001,0.005,LeakyReLU
+1.1179373264312744,5333.393999999999,category == 'B' and data.str.contains('X') and data.str.contains('AZ') and id >= 500000 and id < 800000,0.001,0.01,ReLU
+1.1205401420593262,4830.5650000000005,id < 800000 and category == 'B' and data.str.contains('X') and id >= 500000 and data.str.contains('AZ'),0.001,0.01,LeakyReLU
+1.1127240657806396,4524.767999999999,category == 'B' and data.str.contains('AZ') and id < 800000 and id >= 500000 and data.str.contains('X'),0.005,0.001,ReLU
+1.1390447616577148,5227.886,id >= 500000 and data.str.contains('AZ') and id < 800000 and data.str.contains('X') and category == 'B',0.005,0.001,LeakyReLU
+1.1385388374328613,4416.451,category == 'B' and id < 800000 and data.str.contains('AZ') and id >= 500000 and data.str.contains('X'),0.005,0.005,ReLU
+1.1811492443084717,4460.418000000001,id >= 500000 and id < 800000 and data.str.contains('AZ') and data.str.contains('X') and category == 'B',0.005,0.005,LeakyReLU
+1.1126368045806885,6924.650999999999,id >= 500000 and data.str.contains('X') and data.str.contains('AZ') and id < 800000 and category == 'B',0.005,0.01,ReLU
+1.1207160949707031,8832.892,data.str.contains('X') and category == 'B' and id < 800000 and id >= 500000 and data.str.contains('AZ'),0.005,0.01,LeakyReLU
+1.1062960624694824,5157.183,id >= 500000 and id < 800000 and data.str.contains('X') and data.str.contains('AZ') and category == 'B',0.01,0.001,ReLU
+1.112401008605957,5373.5470000000005,id >= 500000 and data.str.contains('X') and id < 800000 and category == 'B' and data.str.contains('AZ'),0.01,0.001,LeakyReLU
+1.111224889755249,7173.547,id < 800000 and data.str.contains('X') and id >= 500000 and category == 'B' and data.str.contains('AZ'),0.01,0.005,ReLU
+1.1153557300567627,5256.781,category == 'B' and data.str.contains('X') and id < 800000 and data.str.contains('AZ') and id >= 500000,0.01,0.005,LeakyReLU
+1.1157877445220947,7030.914,id >= 500000 and data.str.contains('X') and data.str.contains('AZ') and category == 'B' and id < 800000,0.01,0.01,ReLU
+1.1231541633605957,6967.367,id < 800000 and data.str.contains('AZ') and category == 'B' and data.str.contains('X') and id >= 500000,0.01,0.01,LeakyReLU

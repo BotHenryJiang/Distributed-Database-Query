@@ -313,9 +313,8 @@ class GANOptimizer(Optimizer):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def optimize(self, query):
-        subqueries = query.split(" and ")
-        input_dim = len(subqueries)
-        output_dim = len(subqueries)
+        # 解析查询子语句，包括处理 "OR"
+        parsed_query, input_dim, output_dim = self.parse_query(query)
 
         # 初始化生成器和判别器
         self.generator = Generator(input_dim, output_dim).to(self.device)
@@ -326,17 +325,40 @@ class GANOptimizer(Optimizer):
         d_optimizer = optim.Adam(self.discriminator.parameters(), lr=0.001)
 
         # 训练GAN
-        self.train_gan(subqueries, g_optimizer, d_optimizer)
+        self.train_gan(parsed_query, g_optimizer, d_optimizer, input_dim)
 
         # 使用训练好的生成器生成优化后的查询顺序
-        optimized_query = self.generate_optimized_query(subqueries)
+        optimized_query = self.generate_optimized_query(parsed_query)
 
         return optimized_query
 
-    def train_gan(self, subqueries, g_optimizer, d_optimizer, epochs=1000):
+    def parse_query(self, query):
+        # 解析查询字符串为逻辑树
+        def parse_expression(expression):
+            if " or " in expression:
+                return {"op": "or", "args": [parse_expression(e) for e in expression.split(" or ")]}
+            elif " and " in expression:
+                return {"op": "and", "args": [parse_expression(e) for e in expression.split(" and ")]}
+            else:
+                return expression.strip()
+
+        def count_leaves(subqueries):
+            if isinstance(subqueries, str):
+                return 1
+            elif isinstance(subqueries, dict):
+                return sum(count_leaves(arg) for arg in subqueries["args"])
+
+        parsed_query = parse_expression(query)
+        input_dim = count_leaves(parsed_query)
+        output_dim = input_dim
+
+        return parsed_query, input_dim, output_dim
+
+    def train_gan(self, subqueries, g_optimizer, d_optimizer, input_dim, epochs=1000):
+        flat_subqueries = self.flatten_subqueries(subqueries)
+        real_data = torch.FloatTensor([i for i in range(len(flat_subqueries))]).unsqueeze(0).to(self.device)
         for epoch in range(epochs):
             # 生成器生成查询顺序
-            real_data = torch.FloatTensor([i for i in range(len(subqueries))]).to(self.device)
             fake_data = self.generator(real_data).detach()
 
             # 训练判别器
@@ -358,14 +380,34 @@ class GANOptimizer(Optimizer):
             if epoch % 100 == 0:
                 print(f"Epoch {epoch}/{epochs}, D Loss: {d_loss.item()}, G Loss: {g_loss.item()}")
 
+    def flatten_subqueries(self, subqueries):
+        # 将逻辑树展平成子查询列表
+        if isinstance(subqueries, str):
+            return [subqueries]
+        elif isinstance(subqueries, dict):
+            flat_list = []
+            for arg in subqueries["args"]:
+                flat_list.extend(self.flatten_subqueries(arg))
+            return flat_list
+
     def generate_optimized_query(self, subqueries):
-        real_data = torch.FloatTensor([i for i in range(len(subqueries))]).to(self.device)
+        flat_subqueries = self.flatten_subqueries(subqueries)
+        real_data = torch.FloatTensor([i for i in range(len(flat_subqueries))]).unsqueeze(0).to(self.device)
         with torch.no_grad():
             optimized_order = self.generator(real_data).cpu().numpy().argsort()
-        optimized_subqueries = [subqueries[i] for i in optimized_order]
-        return " and ".join(optimized_subqueries)
+        optimized_flat_subqueries = [flat_subqueries[i] for i in optimized_order[0]]
+        return self.reconstruct_query(subqueries, optimized_flat_subqueries)
 
+    def reconstruct_query(self, subqueries, optimized_flat_subqueries):
+        # 根据优化后的子查询顺序重建查询字符串
+        def reconstruct(subqueries, flat_iter):
+            if isinstance(subqueries, str):
+                return next(flat_iter)
+            elif isinstance(subqueries, dict):
+                args = [reconstruct(arg, flat_iter) for arg in subqueries["args"]]
+                return f" {subqueries['op']} ".join(args)
 
+        return reconstruct(subqueries, iter(optimized_flat_subqueries))
 
 # 加载节点数据
 nodes = []
@@ -392,7 +434,7 @@ optimizers = {
 }
 
 # 测试和比较不同优化器的性能
-query = "categoty == 'B' and data.str.contains('X') and data.str.contains('AZ') and id >=500000 and id<800000 "
+query = "category == 'B' and data.str.contains('X') and data.str.contains('AZ') and id >=500000 and id<800000 or data.str.contains('X') and data.str.contains('AZ') and data.str.contains('1') and data.str.contains('G') and category == 'A' and id >= 100 and id < 200000"
 
 for name, optimizer in optimizers.items():
     print(f"\nRunning {name} Optimizer...")
