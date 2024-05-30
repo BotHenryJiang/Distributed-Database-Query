@@ -3,6 +3,8 @@ import random
 import pandas as pd
 import dask.dataframe as dd
 from database_setup import ShardManager
+import json
+import csv
 
 # 数据库节点
 class Node:
@@ -50,7 +52,7 @@ class QueryRouter:
     def query(self, query, optimizer):
         print(f"\nOriginal Query: {query}")
         start_optimization_time = time.time()
-        optimized_query, best_individuals, best_fitnesses, best_costs = optimizer.optimize(query)
+        optimized_query, best_individuals, best_fitnesses, best_costs, iteration_results, all_fitnesses, all_costs = optimizer.optimize(query)
         optimization_time = time.time() - start_optimization_time
 
         print(f"Optimized Query: {optimized_query}")
@@ -69,7 +71,7 @@ class QueryRouter:
         total_query_time = sum(query_times)
         print(f"Optimization Time: {optimization_time} seconds")
         print(f"Total Simulated Query Time: {total_query_time} seconds")
-        return total_results, query_times, total_query_time, optimization_time, best_individuals, best_fitnesses, best_costs
+        return total_results, query_times, total_query_time, optimization_time, best_individuals, best_fitnesses, best_costs, iteration_results, all_fitnesses, all_costs
 
 # 优化器基类
 class Optimizer:
@@ -78,11 +80,6 @@ class Optimizer:
 
     def optimize(self, query):
         raise NotImplementedError("Subclasses should implement this method")
-
-    def calculate_optimization_time(self, query, data_size):
-        query_complexity = len(query.split(" and "))
-        optimization_time = 0.01 * query_complexity * (data_size / 1000)
-        return optimization_time
 
 # 遗传算法优化器
 class GeneticAlgorithmOptimizer(Optimizer):
@@ -106,7 +103,7 @@ class GeneticAlgorithmOptimizer(Optimizer):
             try:
                 individual_query = " and ".join(individual)
                 start_time = time.time()
-                result = self.all_data.query(individual_query)
+                self.all_data.query(individual_query)
                 end_time = time.time()
                 execution_time = end_time - start_time
                 return execution_time
@@ -123,8 +120,7 @@ class GeneticAlgorithmOptimizer(Optimizer):
                 return float('inf')
 
         def crossover(parent1, parent2):
-            split_point = random.randint(1, len(parent1) -```python
-2)
+            split_point = random.randint(1, len(parent1) - 2)
             child = parent1[:split_point] + [sq for sq in parent2 if sq not in parent1[:split_point]]
             return child
 
@@ -138,9 +134,19 @@ class GeneticAlgorithmOptimizer(Optimizer):
         best_individuals = []
         best_fitnesses = []
         best_costs = []
+        iteration_results = []
+
+        # 保存每次迭代的全部个体的查询代价和适应度
+        all_fitnesses = []
+        all_costs = []
 
         population = generate_population(self.population_size, subqueries)
         for generation in range(self.generations):
+            fitness_values = [fitness(ind) for ind in population]
+            cost_values = [cost(ind) for ind in population]
+            all_fitnesses.append(fitness_values)
+            all_costs.append(cost_values)
+
             population = sorted(population, key=fitness)
             next_generation = population[:2]
             for _ in range(self.population_size - 2):
@@ -158,21 +164,33 @@ class GeneticAlgorithmOptimizer(Optimizer):
             best_fitnesses.append(best_fitness)
             best_costs.append(best_cost)
 
+            # 保存每次迭代的结果
+            iteration_results.append({
+                "Generation": generation + 1,
+                "Best Individual": " and ".join(best_individual),
+                "Fitness": best_fitness,
+                "Cost": best_cost
+            })
+
         best_individual = min(population, key=fitness)
-        return " and ".join(best_individual), best_individuals, best_fitnesses, best_costs
+        return " and ".join(best_individual), best_individuals, best_fitnesses, best_costs, iteration_results, all_fitnesses, all_costs
 
 def evaluate_optimizer(query_router, query, optimizer):
-    results, query_times, total_query_time, optimization_time, best_individuals, best_fitnesses, best_costs = query_router.query(query, optimizer)
+    results, query_times, total_query_time, optimization_time, best_individuals, best_fitnesses, best_costs, iteration_results, all_fitnesses, all_costs = query_router.query(query, optimizer)
     
     performance_metrics = {
         "Optimization Time": optimization_time,
         "Query Execution Time": total_query_time,
         "Best Individuals": best_individuals,
         "Best Fitnesses": best_fitnesses,
-        "Best Costs": best_costs
+        "Best Costs": best_costs,
+        "Iteration Results": iteration_results,
+        "All Fitnesses": all_fitnesses,
+        "All Costs": all_costs
     }
     
     return performance_metrics
+
 
 def main():
     # 加载节点数据
@@ -208,6 +226,8 @@ def main():
         {"population_size": 20, "generations": 200, "mutation_rate": 0.4},
     ]
 
+    all_results = []
+
     for params in param_combinations:
         print(f"\nRunning GA Optimizer with params: {params}")
         ga_optimizer = GeneticAlgorithmOptimizer(
@@ -223,6 +243,33 @@ def main():
         print(f"Best Individuals per Generation: {performance_metrics['Best Individuals']}")
         print(f"Best Fitnesses per Generation: {performance_metrics['Best Fitnesses']}")
         print(f"Best Costs per Generation: {performance_metrics['Best Costs']}")
+
+        # 保存每次迭代得到的全部查询代价和适应度
+        all_results.append({
+            "params": params,
+            "performance_metrics": performance_metrics
+        })
+
+    # 将所有结果保存到CSV文件中
+    with open("ga_optimization_results.csv", "w", newline='') as csvfile:
+        fieldnames = ['params', 'generation', 'best_individual', 'best_fitness', 'best_cost', 'all_fitnesses', 'all_costs']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for result in all_results:
+            params = result["params"]
+            performance_metrics = result["performance_metrics"]
+            for i, iteration_result in enumerate(performance_metrics["Iteration Results"]):
+                row = {
+                    'params': json.dumps(params),
+                    'generation': iteration_result['Generation'],
+                    'best_individual': iteration_result['Best Individual'],
+                    'best_fitness': iteration_result['Fitness'],
+                    'best_cost': iteration_result['Cost'],
+                    'all_fitnesses': json.dumps(performance_metrics['All Fitnesses'][i]),
+                    'all_costs': json.dumps(performance_metrics['All Costs'][i])
+                }
+                writer.writerow(row)
 
 if __name__ == "__main__":
     main()

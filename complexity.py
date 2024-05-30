@@ -22,3 +22,22 @@ for bar in bars:
 
 # 显示图表
 plt.show()
+
+
+'''{"population_size": 10, "generations": 50, "mutation_rate": 0.1},
+        {"population_size": 10, "generations": 50, "mutation_rate": 0.2},
+        {"population_size": 10, "generations": 50, "mutation_rate": 0.3},
+        {"population_size": 10, "generations": 50, "mutation_rate": 0.4},
+        {"population_size": 20, "generations": 50, "mutation_rate": 0.1},
+        {"population_size": 20, "generations": 50, "mutation_rate": 0.2},
+        {"population_size": 20, "generations": 50, "mutation_rate": 0.3},
+        {"population_size": 20, "generations": 50, "mutation_rate": 0.4},
+        {"population_size": 10, "generations": 100, "mutation_rate": 0.1},
+        {"population_size": 10, "generations": 100, "mutation_rate": 0.2},
+        {"population_size": 10, "generations": 100, "mutation_rate": 0.3},
+        {"population_size": 10, "generations": 100, "mutation_rate": 0.4},
+        {"population_size": 20, "generations": 200, "mutation_rate": 0.1},
+        {"population_size": 20, "generations": 200, "mutation_rate": 0.2},
+        {"population_size": 20, "generations": 200, "mutation_rate": 0.3},
+        {"population_size": 20, "generations": 200, "mutation_rate": 0.4},
+        '''
