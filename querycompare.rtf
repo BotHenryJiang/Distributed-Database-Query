@@ -1,0 +1,597 @@
+{\rtf1\ansi\ansicpg936\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 (base) jiangjiaxudeMacBook-Pro:SettedCost jiangjiaxu$ python3 query_and_only.py \
+\
+Running RBO Optimizer...\
+\
+Original Query:  data.str.contains('Y') and category == 'A' and data.str.contains('BS') and id >=500000 and id<1000000 \
+Optimized Query: category == 'A' and id >=500000 and id<1000000  and  data.str.contains('Y') and data.str.contains('BS')\
+Node 1 Simulated Query Time: 436.19199999999995 seconds\
+Node 1 Query Result Sample:\
+           id                                               data category\
+50002  500020  ZSBGE16TF4VT3I0CERGOZ2I7591KTGPEDS4B4OAT8RJWEO...        A\
+50013  500130  5AQZ2K5WEUKL8CRD3KEKT666ASMU2NIAMZRUC33X005C9F...        A\
+50015  500150  QFBV3I9NBM396C4BMT7XALTWTTUC73YD0GPX5NN2NVZHYI...        A\
+50019  500190  DXMLFUGCSXJ020VP9HK003SXT7R3LPJVNEPJA8KO2XIFBJ...        A\
+50028  500280  CI98JU24ZOVE4C22ZNLSGW2EZUZBA6MWU1U19T64TJM1Y5...        A\
+Node 2 Simulated Query Time: 440.557 seconds\
+Node 2 Query Result Sample:\
+           id                                               data category\
+50015  500151  DVMQMMLGUO7HKI2LHODT7EX9JTWMXB6UHRC5513V5ENPAL...        A\
+50018  500181  XVMH7L2OX4M749060YGNOWCX8ALCLTUAZNLMPBBZCVB6ZD...        A\
+50037  500371  5EV9BQ7095QJXAYVAP50EFEM4E41Y3WHG4QS33WWG7ZTLL...        A\
+50082  500821  EGZLX8R1HHG68EWWPF8OYIH9XQH5VPO39ABGOX2H8ZTQG0...        A\
+50084  500841  FFLMLBI1S5HW9W3PHE6QFGF39SF05N0KW7W5OWQCZWNIE7...        A\
+Node 3 Simulated Query Time: 443.6820000000001 seconds\
+Node 3 Query Result Sample:\
+           id                                               data category\
+50002  500022  MFYRQK62WTLJZYPS630T81WCZL819SGL9DNL692ETJVFGR...        A\
+50016  500162  PMDEA3BYDOXXA6W8T3545CML8JNW694NYWNQD7CV5886G2...        A\
+50025  500252  YDU3OHNBA3J1U8D1JWP5TMWR6ZWUKLBBH9P6V1R3G0CKGA...        A\
+50028  500282  TJ80OMO4SMREOB496XWHZ68PVAKGYPUC5HAJAVLA5V2FYZ...        A\
+50038  500382  299YV27LRSF1PGWN8SANP5OELNMT0CN4FMWGQY67SZUYO8...        A\
+Node 4 Simulated Query Time: 450.067 seconds\
+Node 4 Query Result Sample:\
+           id                                               data category\
+50007  500073  ZGVPFJ17GYNQWPTNB5XQOQLC6USSZU1T9F4A2EREWEDQ7B...        A\
+50025  500253  KFLHKJX0NV3TQZ7A02KIY9X55BJ2GO5PVPK6ASKTKULXDJ...        A\
+50043  500433  TSMJE92R1VPP8UK35PP072KRJ8HS5Z3NRQRXOMGYH0ZRCW...        A\
+50046  500463  EXA8NHOPB7X6X8D200RMASYO0HFYNX4GQ8E48Y59DRPCIL...        A\
+50070  500703  0ZT62B66392YL1XILBJWOSH56UW1IFX0FFJU7M7H6PTDDC...        A\
+Node 5 Simulated Query Time: 455.9239999999999 seconds\
+Node 5 Query Result Sample:\
+           id                                               data category\
+50009  500094  4Y3VTK11AKJQHV8WWFI8FMYM536N7CUE964B3SMHQUTGZ0...        A\
+50010  500104  7F80B602WE3MTKZ9C7SM5NVF1CRJHJU9POK7KBBSPSE02Y...        A\
+50023  500234  V0WFBF09TMVFSQR3AT4JWPC4HF16QRAR87A3TXMX6VF4CQ...        A\
+50026  500264  C2IPA6LKF1KODA9YKMLCIYI2EKBMPKAK38CKL4X2NUEGQB...        A\
+50034  500344  MLB2R0L4C6IHQ81HOTVKMNCY9I4WHS6D1JOKHFVUSFAER5...        A\
+Node 6 Simulated Query Time: 464.72700000000003 seconds\
+Node 6 Query Result Sample:\
+           id                                               data category\
+50000  500005  HPQWZW545EWQ14CLVEA2E8V4CBI15HFUHLHNMLPFUCDRAX...        A\
+50004  500045  9URILZE9IPDR57HN5U4I8GGQ20TSG711W3L0MAVXXOG4S0...        A\
+50007  500075  6A9S56DW800RVJ8GVG59KZ3WXI5JGLZ1UNT317OIFCRIAD...        A\
+50015  500155  FC9YAP454EN86P1SKI1LKSMQH0K65PWZWOGB8G6PF3EKE7...        A\
+50016  500165  I5X1YWEI9AF2EOWR5PRTNKG6UOP2CIU70AE0UZYC8IOQXL...        A\
+Node 7 Simulated Query Time: 469.69499999999994 seconds\
+Node 7 Query Result Sample:\
+           id                                               data category\
+50012  500126  CRR3BR3P19LD2Z94TPD2IT0I5T4HQA6GCUG8TEAXWES9XN...        A\
+50013  500136  5CLQVXXIOE6A3VEVAFRDB4ZRG163KHNUMP3MG1EMS4Q4IQ...        A\
+50015  500156  3CENU0RNAVGCVTNY6AALDFQDB7T1NSV9HUBWM57XKEY178...        A\
+50020  500206  WJQ0ADCIUQNB07PQTBSVRYKP43YK9NS65THU1W86S6EM8G...        A\
+50035  500356  Y0C5BW7E5BK87HTIQD7JYP05SMYTWJ5D870I71SGJJYE1K...        A\
+Node 8 Simulated Query Time: 473.58899999999994 seconds\
+Node 8 Query Result Sample:\
+           id                                               data category\
+50002  500027  D76OJS43J6NNVPTZ00TV2TQBKT78VV83OYMIPS8IYXXV2X...        A\
+50004  500047  5R1KAE1V2AE9UWSZY503U0I68Q6C8JV0I6PW62HQ9V5UJH...        A\
+50014  500147  N4JPR1YPKPLQTFVCFOWYJRPQXUDO0MSH7JFB2KUPEJ5MRB...        A\
+50027  500277  0KS431VKYH87F9FU2PUOXNJNVYXH1V9UIW3WOV0Q35WQKW...        A\
+50028  500287  F591FUV9PYQWGU77T5I6DYR3LH3WRJYKRP0VPR68STO9ZA...        A\
+Node 9 Simulated Query Time: 477.61199999999997 seconds\
+Node 9 Query Result Sample:\
+           id                                               data category\
+50000  500008  JW06AESPQT4WSOE1Z1JZ36T100UG0QKJYLJO18MKKOK79M...        A\
+50001  500018  QFV1KLB0JWTK9G5CG9VW1LDYVQ2RB6Y321K3EQ4YMHHCRW...        A\
+50004  500048  SBXKJHOJDTX5UPCD54M9HTQRP0ZJ3EF1Q1QQRS9WEFHMY2...        A\
+50023  500238  HQX5OH6YSBEPJWPW91HN3OQR8NGTA4TP2WRNOJUGP2KMP7...        A\
+50025  500258  F6Y9UUHEYP6SSCKEC0H54PHPRXUXNF0W8IVM5IUX3TQ32Z...        A\
+Node 10 Simulated Query Time: 480.56399999999996 seconds\
+Node 10 Query Result Sample:\
+           id                                               data category\
+50018  500189  1VRTD7J9RFTFXWHAFJ4378HXP1KLVE89HPFSMZ9074UQEP...        A\
+50023  500239  X7I5ISMYHH1RA27LV4LGLEZCL24KMQPHU565VF84LVA4TQ...        A\
+50040  500409  Q4G1XMZZBXLN3LIZM1ZND3NXE0ELKJOF4K7JPXZNRV993Y...        A\
+50042  500429  SORNUOK82JO5TD69RS89FZP1F3BPEBDX0ZO62FH77D101S...        A\
+50070  500709  AC0XSH5ZVL12SG1MV6MNLFD4Y8GEEMLTKO2GTUN7JNCZY3...        A\
+Optimization Time: 1.1920928955078125e-05 seconds\
+Total Simulated Query Time: 4592.609 seconds\
+RBO Performance Metrics: \{'Optimization Time': 1.1920928955078125e-05, 'Query Execution Time': 4592.609\}\
+\
+Running CBO Optimizer...\
+\
+Original Query:  data.str.contains('Y') and category == 'A' and data.str.contains('BS') and id >=500000 and id<1000000 \
+Optimized Query:  data.str.contains('Y') and category == 'A' and data.str.contains('BS') and id >=500000 and id<1000000 \
+Node 1 Simulated Query Time: 921.8119999999999 seconds\
+Node 1 Query Result Sample:\
+           id                                               data category\
+50002  500020  ZSBGE16TF4VT3I0CERGOZ2I7591KTGPEDS4B4OAT8RJWEO...        A\
+50013  500130  5AQZ2K5WEUKL8CRD3KEKT666ASMU2NIAMZRUC33X005C9F...        A\
+50015  500150  QFBV3I9NBM396C4BMT7XALTWTTUC73YD0GPX5NN2NVZHYI...        A\
+50019  500190  DXMLFUGCSXJ020VP9HK003SXT7R3LPJVNEPJA8KO2XIFBJ...        A\
+50028  500280  CI98JU24ZOVE4C22ZNLSGW2EZUZBA6MWU1U19T64TJM1Y5...        A\
+Node 2 Simulated Query Time: 925.825 seconds\
+Node 2 Query Result Sample:\
+           id                                               data category\
+50015  500151  DVMQMMLGUO7HKI2LHODT7EX9JTWMXB6UHRC5513V5ENPAL...        A\
+50018  500181  XVMH7L2OX4M749060YGNOWCX8ALCLTUAZNLMPBBZCVB6ZD...        A\
+50037  500371  5EV9BQ7095QJXAYVAP50EFEM4E41Y3WHG4QS33WWG7ZTLL...        A\
+50082  500821  EGZLX8R1HHG68EWWPF8OYIH9XQH5VPO39ABGOX2H8ZTQG0...        A\
+50084  500841  FFLMLBI1S5HW9W3PHE6QFGF39SF05N0KW7W5OWQCZWNIE7...        A\
+Node 3 Simulated Query Time: 930.444 seconds\
+Node 3 Query Result Sample:\
+           id                                               data category\
+50002  500022  MFYRQK62WTLJZYPS630T81WCZL819SGL9DNL692ETJVFGR...        A\
+50016  500162  PMDEA3BYDOXXA6W8T3545CML8JNW694NYWNQD7CV5886G2...        A\
+50025  500252  YDU3OHNBA3J1U8D1JWP5TMWR6ZWUKLBBH9P6V1R3G0CKGA...        A\
+50028  500282  TJ80OMO4SMREOB496XWHZ68PVAKGYPUC5HAJAVLA5V2FYZ...        A\
+50038  500382  299YV27LRSF1PGWN8SANP5OELNMT0CN4FMWGQY67SZUYO8...        A\
+Node 4 Simulated Query Time: 937.6160000000001 seconds\
+Node 4 Query Result Sample:\
+           id                                               data category\
+50007  500073  ZGVPFJ17GYNQWPTNB5XQOQLC6USSZU1T9F4A2EREWEDQ7B...        A\
+50025  500253  KFLHKJX0NV3TQZ7A02KIY9X55BJ2GO5PVPK6ASKTKULXDJ...        A\
+50043  500433  TSMJE92R1VPP8UK35PP072KRJ8HS5Z3NRQRXOMGYH0ZRCW...        A\
+50046  500463  EXA8NHOPB7X6X8D200RMASYO0HFYNX4GQ8E48Y59DRPCIL...        A\
+50070  500703  0ZT62B66392YL1XILBJWOSH56UW1IFX0FFJU7M7H6PTDDC...        A\
+Node 5 Simulated Query Time: 941.7249999999999 seconds\
+Node 5 Query Result Sample:\
+           id                                               data category\
+50009  500094  4Y3VTK11AKJQHV8WWFI8FMYM536N7CUE964B3SMHQUTGZ0...        A\
+50010  500104  7F80B602WE3MTKZ9C7SM5NVF1CRJHJU9POK7KBBSPSE02Y...        A\
+50023  500234  V0WFBF09TMVFSQR3AT4JWPC4HF16QRAR87A3TXMX6VF4CQ...        A\
+50026  500264  C2IPA6LKF1KODA9YKMLCIYI2EKBMPKAK38CKL4X2NUEGQB...        A\
+50034  500344  MLB2R0L4C6IHQ81HOTVKMNCY9I4WHS6D1JOKHFVUSFAER5...        A\
+Node 6 Simulated Query Time: 949.4080000000001 seconds\
+Node 6 Query Result Sample:\
+           id                                               data category\
+50000  500005  HPQWZW545EWQ14CLVEA2E8V4CBI15HFUHLHNMLPFUCDRAX...        A\
+50004  500045  9URILZE9IPDR57HN5U4I8GGQ20TSG711W3L0MAVXXOG4S0...        A\
+50007  500075  6A9S56DW800RVJ8GVG59KZ3WXI5JGLZ1UNT317OIFCRIAD...        A\
+50015  500155  FC9YAP454EN86P1SKI1LKSMQH0K65PWZWOGB8G6PF3EKE7...        A\
+50016  500165  I5X1YWEI9AF2EOWR5PRTNKG6UOP2CIU70AE0UZYC8IOQXL...        A\
+Node 7 Simulated Query Time: 954.76 seconds\
+Node 7 Query Result Sample:\
+           id                                               data category\
+50012  500126  CRR3BR3P19LD2Z94TPD2IT0I5T4HQA6GCUG8TEAXWES9XN...        A\
+50013  500136  5CLQVXXIOE6A3VEVAFRDB4ZRG163KHNUMP3MG1EMS4Q4IQ...        A\
+50015  500156  3CENU0RNAVGCVTNY6AALDFQDB7T1NSV9HUBWM57XKEY178...        A\
+50020  500206  WJQ0ADCIUQNB07PQTBSVRYKP43YK9NS65THU1W86S6EM8G...        A\
+50035  500356  Y0C5BW7E5BK87HTIQD7JYP05SMYTWJ5D870I71SGJJYE1K...        A\
+Node 8 Simulated Query Time: 959.547 seconds\
+Node 8 Query Result Sample:\
+           id                                               data category\
+50002  500027  D76OJS43J6NNVPTZ00TV2TQBKT78VV83OYMIPS8IYXXV2X...        A\
+50004  500047  5R1KAE1V2AE9UWSZY503U0I68Q6C8JV0I6PW62HQ9V5UJH...        A\
+50014  500147  N4JPR1YPKPLQTFVCFOWYJRPQXUDO0MSH7JFB2KUPEJ5MRB...        A\
+50027  500277  0KS431VKYH87F9FU2PUOXNJNVYXH1V9UIW3WOV0Q35WQKW...        A\
+50028  500287  F591FUV9PYQWGU77T5I6DYR3LH3WRJYKRP0VPR68STO9ZA...        A\
+Node 9 Simulated Query Time: 963.176 seconds\
+Node 9 Query Result Sample:\
+           id                                               data category\
+50000  500008  JW06AESPQT4WSOE1Z1JZ36T100UG0QKJYLJO18MKKOK79M...        A\
+50001  500018  QFV1KLB0JWTK9G5CG9VW1LDYVQ2RB6Y321K3EQ4YMHHCRW...        A\
+50004  500048  SBXKJHOJDTX5UPCD54M9HTQRP0ZJ3EF1Q1QQRS9WEFHMY2...        A\
+50023  500238  HQX5OH6YSBEPJWPW91HN3OQR8NGTA4TP2WRNOJUGP2KMP7...        A\
+50025  500258  F6Y9UUHEYP6SSCKEC0H54PHPRXUXNF0W8IVM5IUX3TQ32Z...        A\
+Node 10 Simulated Query Time: 967.6750000000001 seconds\
+Node 10 Query Result Sample:\
+           id                                               data category\
+50018  500189  1VRTD7J9RFTFXWHAFJ4378HXP1KLVE89HPFSMZ9074UQEP...        A\
+50023  500239  X7I5ISMYHH1RA27LV4LGLEZCL24KMQPHU565VF84LVA4TQ...        A\
+50040  500409  Q4G1XMZZBXLN3LIZM1ZND3NXE0ELKJOF4K7JPXZNRV993Y...        A\
+50042  500429  SORNUOK82JO5TD69RS89FZP1F3BPEBDX0ZO62FH77D101S...        A\
+50070  500709  AC0XSH5ZVL12SG1MV6MNLFD4Y8GEEMLTKO2GTUN7JNCZY3...        A\
+Optimization Time: 1.8835067749023438e-05 seconds\
+Total Simulated Query Time: 9451.988 seconds\
+CBO Performance Metrics: \{'Optimization Time': 1.8835067749023438e-05, 'Query Execution Time': 9451.988\}\
+\
+Running DP Optimizer...\
+\
+Original Query:  data.str.contains('Y') and category == 'A' and data.str.contains('BS') and id >=500000 and id<1000000 \
+Optimized Query:  data.str.contains('Y') and category == 'A' and data.str.contains('BS') and id >=500000 and id<1000000 \
+Node 1 Simulated Query Time: 921.8119999999999 seconds\
+Node 1 Query Result Sample:\
+           id                                               data category\
+50002  500020  ZSBGE16TF4VT3I0CERGOZ2I7591KTGPEDS4B4OAT8RJWEO...        A\
+50013  500130  5AQZ2K5WEUKL8CRD3KEKT666ASMU2NIAMZRUC33X005C9F...        A\
+50015  500150  QFBV3I9NBM396C4BMT7XALTWTTUC73YD0GPX5NN2NVZHYI...        A\
+50019  500190  DXMLFUGCSXJ020VP9HK003SXT7R3LPJVNEPJA8KO2XIFBJ...        A\
+50028  500280  CI98JU24ZOVE4C22ZNLSGW2EZUZBA6MWU1U19T64TJM1Y5...        A\
+Node 2 Simulated Query Time: 925.825 seconds\
+Node 2 Query Result Sample:\
+           id                                               data category\
+50015  500151  DVMQMMLGUO7HKI2LHODT7EX9JTWMXB6UHRC5513V5ENPAL...        A\
+50018  500181  XVMH7L2OX4M749060YGNOWCX8ALCLTUAZNLMPBBZCVB6ZD...        A\
+50037  500371  5EV9BQ7095QJXAYVAP50EFEM4E41Y3WHG4QS33WWG7ZTLL...        A\
+50082  500821  EGZLX8R1HHG68EWWPF8OYIH9XQH5VPO39ABGOX2H8ZTQG0...        A\
+50084  500841  FFLMLBI1S5HW9W3PHE6QFGF39SF05N0KW7W5OWQCZWNIE7...        A\
+Node 3 Simulated Query Time: 930.444 seconds\
+Node 3 Query Result Sample:\
+           id                                               data category\
+50002  500022  MFYRQK62WTLJZYPS630T81WCZL819SGL9DNL692ETJVFGR...        A\
+50016  500162  PMDEA3BYDOXXA6W8T3545CML8JNW694NYWNQD7CV5886G2...        A\
+50025  500252  YDU3OHNBA3J1U8D1JWP5TMWR6ZWUKLBBH9P6V1R3G0CKGA...        A\
+50028  500282  TJ80OMO4SMREOB496XWHZ68PVAKGYPUC5HAJAVLA5V2FYZ...        A\
+50038  500382  299YV27LRSF1PGWN8SANP5OELNMT0CN4FMWGQY67SZUYO8...        A\
+Node 4 Simulated Query Time: 937.6160000000001 seconds\
+Node 4 Query Result Sample:\
+           id                                               data category\
+50007  500073  ZGVPFJ17GYNQWPTNB5XQOQLC6USSZU1T9F4A2EREWEDQ7B...        A\
+50025  500253  KFLHKJX0NV3TQZ7A02KIY9X55BJ2GO5PVPK6ASKTKULXDJ...        A\
+50043  500433  TSMJE92R1VPP8UK35PP072KRJ8HS5Z3NRQRXOMGYH0ZRCW...        A\
+50046  500463  EXA8NHOPB7X6X8D200RMASYO0HFYNX4GQ8E48Y59DRPCIL...        A\
+50070  500703  0ZT62B66392YL1XILBJWOSH56UW1IFX0FFJU7M7H6PTDDC...        A\
+Node 5 Simulated Query Time: 941.7249999999999 seconds\
+Node 5 Query Result Sample:\
+           id                                               data category\
+50009  500094  4Y3VTK11AKJQHV8WWFI8FMYM536N7CUE964B3SMHQUTGZ0...        A\
+50010  500104  7F80B602WE3MTKZ9C7SM5NVF1CRJHJU9POK7KBBSPSE02Y...        A\
+50023  500234  V0WFBF09TMVFSQR3AT4JWPC4HF16QRAR87A3TXMX6VF4CQ...        A\
+50026  500264  C2IPA6LKF1KODA9YKMLCIYI2EKBMPKAK38CKL4X2NUEGQB...        A\
+50034  500344  MLB2R0L4C6IHQ81HOTVKMNCY9I4WHS6D1JOKHFVUSFAER5...        A\
+Node 6 Simulated Query Time: 949.4080000000001 seconds\
+Node 6 Query Result Sample:\
+           id                                               data category\
+50000  500005  HPQWZW545EWQ14CLVEA2E8V4CBI15HFUHLHNMLPFUCDRAX...        A\
+50004  500045  9URILZE9IPDR57HN5U4I8GGQ20TSG711W3L0MAVXXOG4S0...        A\
+50007  500075  6A9S56DW800RVJ8GVG59KZ3WXI5JGLZ1UNT317OIFCRIAD...        A\
+50015  500155  FC9YAP454EN86P1SKI1LKSMQH0K65PWZWOGB8G6PF3EKE7...        A\
+50016  500165  I5X1YWEI9AF2EOWR5PRTNKG6UOP2CIU70AE0UZYC8IOQXL...        A\
+Node 7 Simulated Query Time: 954.76 seconds\
+Node 7 Query Result Sample:\
+           id                                               data category\
+50012  500126  CRR3BR3P19LD2Z94TPD2IT0I5T4HQA6GCUG8TEAXWES9XN...        A\
+50013  500136  5CLQVXXIOE6A3VEVAFRDB4ZRG163KHNUMP3MG1EMS4Q4IQ...        A\
+50015  500156  3CENU0RNAVGCVTNY6AALDFQDB7T1NSV9HUBWM57XKEY178...        A\
+50020  500206  WJQ0ADCIUQNB07PQTBSVRYKP43YK9NS65THU1W86S6EM8G...        A\
+50035  500356  Y0C5BW7E5BK87HTIQD7JYP05SMYTWJ5D870I71SGJJYE1K...        A\
+Node 8 Simulated Query Time: 959.547 seconds\
+Node 8 Query Result Sample:\
+           id                                               data category\
+50002  500027  D76OJS43J6NNVPTZ00TV2TQBKT78VV83OYMIPS8IYXXV2X...        A\
+50004  500047  5R1KAE1V2AE9UWSZY503U0I68Q6C8JV0I6PW62HQ9V5UJH...        A\
+50014  500147  N4JPR1YPKPLQTFVCFOWYJRPQXUDO0MSH7JFB2KUPEJ5MRB...        A\
+50027  500277  0KS431VKYH87F9FU2PUOXNJNVYXH1V9UIW3WOV0Q35WQKW...        A\
+50028  500287  F591FUV9PYQWGU77T5I6DYR3LH3WRJYKRP0VPR68STO9ZA...        A\
+Node 9 Simulated Query Time: 963.176 seconds\
+Node 9 Query Result Sample:\
+           id                                               data category\
+50000  500008  JW06AESPQT4WSOE1Z1JZ36T100UG0QKJYLJO18MKKOK79M...        A\
+50001  500018  QFV1KLB0JWTK9G5CG9VW1LDYVQ2RB6Y321K3EQ4YMHHCRW...        A\
+50004  500048  SBXKJHOJDTX5UPCD54M9HTQRP0ZJ3EF1Q1QQRS9WEFHMY2...        A\
+50023  500238  HQX5OH6YSBEPJWPW91HN3OQR8NGTA4TP2WRNOJUGP2KMP7...        A\
+50025  500258  F6Y9UUHEYP6SSCKEC0H54PHPRXUXNF0W8IVM5IUX3TQ32Z...        A\
+Node 10 Simulated Query Time: 967.6750000000001 seconds\
+Node 10 Query Result Sample:\
+           id                                               data category\
+50018  500189  1VRTD7J9RFTFXWHAFJ4378HXP1KLVE89HPFSMZ9074UQEP...        A\
+50023  500239  X7I5ISMYHH1RA27LV4LGLEZCL24KMQPHU565VF84LVA4TQ...        A\
+50040  500409  Q4G1XMZZBXLN3LIZM1ZND3NXE0ELKJOF4K7JPXZNRV993Y...        A\
+50042  500429  SORNUOK82JO5TD69RS89FZP1F3BPEBDX0ZO62FH77D101S...        A\
+50070  500709  AC0XSH5ZVL12SG1MV6MNLFD4Y8GEEMLTKO2GTUN7JNCZY3...        A\
+Optimization Time: 4.6253204345703125e-05 seconds\
+Total Simulated Query Time: 9451.988 seconds\
+DP Performance Metrics: \{'Optimization Time': 4.6253204345703125e-05, 'Query Execution Time': 9451.988\}\
+\
+Running GrS Optimizer...\
+\
+Original Query:  data.str.contains('Y') and category == 'A' and data.str.contains('BS') and id >=500000 and id<1000000 \
+Optimized Query: category == 'A' and id >=500000 and id<1000000  and  data.str.contains('Y') and data.str.contains('BS')\
+Node 1 Simulated Query Time: 436.19199999999995 seconds\
+Node 1 Query Result Sample:\
+           id                                               data category\
+50002  500020  ZSBGE16TF4VT3I0CERGOZ2I7591KTGPEDS4B4OAT8RJWEO...        A\
+50013  500130  5AQZ2K5WEUKL8CRD3KEKT666ASMU2NIAMZRUC33X005C9F...        A\
+50015  500150  QFBV3I9NBM396C4BMT7XALTWTTUC73YD0GPX5NN2NVZHYI...        A\
+50019  500190  DXMLFUGCSXJ020VP9HK003SXT7R3LPJVNEPJA8KO2XIFBJ...        A\
+50028  500280  CI98JU24ZOVE4C22ZNLSGW2EZUZBA6MWU1U19T64TJM1Y5...        A\
+Node 2 Simulated Query Time: 440.557 seconds\
+Node 2 Query Result Sample:\
+           id                                               data category\
+50015  500151  DVMQMMLGUO7HKI2LHODT7EX9JTWMXB6UHRC5513V5ENPAL...        A\
+50018  500181  XVMH7L2OX4M749060YGNOWCX8ALCLTUAZNLMPBBZCVB6ZD...        A\
+50037  500371  5EV9BQ7095QJXAYVAP50EFEM4E41Y3WHG4QS33WWG7ZTLL...        A\
+50082  500821  EGZLX8R1HHG68EWWPF8OYIH9XQH5VPO39ABGOX2H8ZTQG0...        A\
+50084  500841  FFLMLBI1S5HW9W3PHE6QFGF39SF05N0KW7W5OWQCZWNIE7...        A\
+Node 3 Simulated Query Time: 443.6820000000001 seconds\
+Node 3 Query Result Sample:\
+           id                                               data category\
+50002  500022  MFYRQK62WTLJZYPS630T81WCZL819SGL9DNL692ETJVFGR...        A\
+50016  500162  PMDEA3BYDOXXA6W8T3545CML8JNW694NYWNQD7CV5886G2...        A\
+50025  500252  YDU3OHNBA3J1U8D1JWP5TMWR6ZWUKLBBH9P6V1R3G0CKGA...        A\
+50028  500282  TJ80OMO4SMREOB496XWHZ68PVAKGYPUC5HAJAVLA5V2FYZ...        A\
+50038  500382  299YV27LRSF1PGWN8SANP5OELNMT0CN4FMWGQY67SZUYO8...        A\
+Node 4 Simulated Query Time: 450.067 seconds\
+Node 4 Query Result Sample:\
+           id                                               data category\
+50007  500073  ZGVPFJ17GYNQWPTNB5XQOQLC6USSZU1T9F4A2EREWEDQ7B...        A\
+50025  500253  KFLHKJX0NV3TQZ7A02KIY9X55BJ2GO5PVPK6ASKTKULXDJ...        A\
+50043  500433  TSMJE92R1VPP8UK35PP072KRJ8HS5Z3NRQRXOMGYH0ZRCW...        A\
+50046  500463  EXA8NHOPB7X6X8D200RMASYO0HFYNX4GQ8E48Y59DRPCIL...        A\
+50070  500703  0ZT62B66392YL1XILBJWOSH56UW1IFX0FFJU7M7H6PTDDC...        A\
+Node 5 Simulated Query Time: 455.9239999999999 seconds\
+Node 5 Query Result Sample:\
+           id                                               data category\
+50009  500094  4Y3VTK11AKJQHV8WWFI8FMYM536N7CUE964B3SMHQUTGZ0...        A\
+50010  500104  7F80B602WE3MTKZ9C7SM5NVF1CRJHJU9POK7KBBSPSE02Y...        A\
+50023  500234  V0WFBF09TMVFSQR3AT4JWPC4HF16QRAR87A3TXMX6VF4CQ...        A\
+50026  500264  C2IPA6LKF1KODA9YKMLCIYI2EKBMPKAK38CKL4X2NUEGQB...        A\
+50034  500344  MLB2R0L4C6IHQ81HOTVKMNCY9I4WHS6D1JOKHFVUSFAER5...        A\
+Node 6 Simulated Query Time: 464.72700000000003 seconds\
+Node 6 Query Result Sample:\
+           id                                               data category\
+50000  500005  HPQWZW545EWQ14CLVEA2E8V4CBI15HFUHLHNMLPFUCDRAX...        A\
+50004  500045  9URILZE9IPDR57HN5U4I8GGQ20TSG711W3L0MAVXXOG4S0...        A\
+50007  500075  6A9S56DW800RVJ8GVG59KZ3WXI5JGLZ1UNT317OIFCRIAD...        A\
+50015  500155  FC9YAP454EN86P1SKI1LKSMQH0K65PWZWOGB8G6PF3EKE7...        A\
+50016  500165  I5X1YWEI9AF2EOWR5PRTNKG6UOP2CIU70AE0UZYC8IOQXL...        A\
+Node 7 Simulated Query Time: 469.69499999999994 seconds\
+Node 7 Query Result Sample:\
+           id                                               data category\
+50012  500126  CRR3BR3P19LD2Z94TPD2IT0I5T4HQA6GCUG8TEAXWES9XN...        A\
+50013  500136  5CLQVXXIOE6A3VEVAFRDB4ZRG163KHNUMP3MG1EMS4Q4IQ...        A\
+50015  500156  3CENU0RNAVGCVTNY6AALDFQDB7T1NSV9HUBWM57XKEY178...        A\
+50020  500206  WJQ0ADCIUQNB07PQTBSVRYKP43YK9NS65THU1W86S6EM8G...        A\
+50035  500356  Y0C5BW7E5BK87HTIQD7JYP05SMYTWJ5D870I71SGJJYE1K...        A\
+Node 8 Simulated Query Time: 473.58899999999994 seconds\
+Node 8 Query Result Sample:\
+           id                                               data category\
+50002  500027  D76OJS43J6NNVPTZ00TV2TQBKT78VV83OYMIPS8IYXXV2X...        A\
+50004  500047  5R1KAE1V2AE9UWSZY503U0I68Q6C8JV0I6PW62HQ9V5UJH...        A\
+50014  500147  N4JPR1YPKPLQTFVCFOWYJRPQXUDO0MSH7JFB2KUPEJ5MRB...        A\
+50027  500277  0KS431VKYH87F9FU2PUOXNJNVYXH1V9UIW3WOV0Q35WQKW...        A\
+50028  500287  F591FUV9PYQWGU77T5I6DYR3LH3WRJYKRP0VPR68STO9ZA...        A\
+Node 9 Simulated Query Time: 477.61199999999997 seconds\
+Node 9 Query Result Sample:\
+           id                                               data category\
+50000  500008  JW06AESPQT4WSOE1Z1JZ36T100UG0QKJYLJO18MKKOK79M...        A\
+50001  500018  QFV1KLB0JWTK9G5CG9VW1LDYVQ2RB6Y321K3EQ4YMHHCRW...        A\
+50004  500048  SBXKJHOJDTX5UPCD54M9HTQRP0ZJ3EF1Q1QQRS9WEFHMY2...        A\
+50023  500238  HQX5OH6YSBEPJWPW91HN3OQR8NGTA4TP2WRNOJUGP2KMP7...        A\
+50025  500258  F6Y9UUHEYP6SSCKEC0H54PHPRXUXNF0W8IVM5IUX3TQ32Z...        A\
+Node 10 Simulated Query Time: 480.56399999999996 seconds\
+Node 10 Query Result Sample:\
+           id                                               data category\
+50018  500189  1VRTD7J9RFTFXWHAFJ4378HXP1KLVE89HPFSMZ9074UQEP...        A\
+50023  500239  X7I5ISMYHH1RA27LV4LGLEZCL24KMQPHU565VF84LVA4TQ...        A\
+50040  500409  Q4G1XMZZBXLN3LIZM1ZND3NXE0ELKJOF4K7JPXZNRV993Y...        A\
+50042  500429  SORNUOK82JO5TD69RS89FZP1F3BPEBDX0ZO62FH77D101S...        A\
+50070  500709  AC0XSH5ZVL12SG1MV6MNLFD4Y8GEEMLTKO2GTUN7JNCZY3...        A\
+Optimization Time: 3.0994415283203125e-05 seconds\
+Total Simulated Query Time: 4592.609 seconds\
+GrS Performance Metrics: \{'Optimization Time': 3.0994415283203125e-05, 'Query Execution Time': 4592.609\}\
+\
+Running GA Optimizer...\
+\
+Original Query:  data.str.contains('Y') and category == 'A' and data.str.contains('BS') and id >=500000 and id<1000000 \
+Generation 1: Best Individual = data.str.contains('BS') and id<1000000  and  data.str.contains('Y') and id >=500000 and category == 'A', Fitness = 1.322605848312378\
+Generation 2: Best Individual = data.str.contains('BS') and  data.str.contains('Y') and id >=500000 and id<1000000  and category == 'A', Fitness = 1.3193607330322266\
+Generation 3: Best Individual =  data.str.contains('Y') and data.str.contains('BS') and category == 'A' and id<1000000  and id >=500000, Fitness = 1.3239796161651611\
+Generation 4: Best Individual = data.str.contains('BS') and  data.str.contains('Y') and category == 'A' and id<1000000  and id >=500000, Fitness = 1.3233656883239746\
+Generation 5: Best Individual = data.str.contains('BS') and category == 'A' and id<1000000  and  data.str.contains('Y') and id >=500000, Fitness = 1.338212013244629\
+Generation 6: Best Individual = data.str.contains('BS') and  data.str.contains('Y') and id >=500000 and category == 'A' and id<1000000 , Fitness = 1.3260281085968018\
+Generation 7: Best Individual =  data.str.contains('Y') and category == 'A' and id<1000000  and data.str.contains('BS') and id >=500000, Fitness = 1.3347280025482178\
+Generation 8: Best Individual = data.str.contains('BS') and id >=500000 and category == 'A' and id<1000000  and  data.str.contains('Y'), Fitness = 1.331496000289917\
+Generation 9: Best Individual =  data.str.contains('Y') and id<1000000  and data.str.contains('BS') and id >=500000 and category == 'A', Fitness = 1.3234171867370605\
+Generation 10: Best Individual = category == 'A' and id >=500000 and data.str.contains('BS') and  data.str.contains('Y') and id<1000000 , Fitness = 1.327272891998291\
+Generation 11: Best Individual = id >=500000 and category == 'A' and data.str.contains('BS') and  data.str.contains('Y') and id<1000000 , Fitness = 1.3271639347076416\
+Generation 12: Best Individual = data.str.contains('BS') and id >=500000 and category == 'A' and id<1000000  and  data.str.contains('Y'), Fitness = 1.322232961654663\
+Generation 13: Best Individual = data.str.contains('BS') and id >=500000 and category == 'A' and  data.str.contains('Y') and id<1000000 , Fitness = 1.3224689960479736\
+Generation 14: Best Individual = data.str.contains('BS') and  data.str.contains('Y') and category == 'A' and id >=500000 and id<1000000 , Fitness = 1.3260281085968018\
+Generation 15: Best Individual = data.str.contains('BS') and id >=500000 and category == 'A' and  data.str.contains('Y') and id<1000000 , Fitness = 1.3323781490325928\
+Generation 16: Best Individual = data.str.contains('BS') and id >=500000 and category == 'A' and  data.str.contains('Y') and id<1000000 , Fitness = 1.3187878131866455\
+Generation 17: Best Individual = data.str.contains('BS') and id >=500000 and category == 'A' and  data.str.contains('Y') and id<1000000 , Fitness = 1.3254451751708984\
+Generation 18: Best Individual = data.str.contains('BS') and id >=500000 and category == 'A' and  data.str.contains('Y') and id<1000000 , Fitness = 1.3176109790802002\
+Generation 19: Best Individual = data.str.contains('BS') and id >=500000 and category == 'A' and  data.str.contains('Y') and id<1000000 , Fitness = 1.323024034500122\
+Generation 20: Best Individual = data.str.contains('BS') and id >=500000 and  data.str.contains('Y') and id<1000000  and category == 'A', Fitness = 1.3140859603881836\
+Generation 21: Best Individual = data.str.contains('BS') and id >=500000 and category == 'A' and  data.str.contains('Y') and id<1000000 , Fitness = 1.316399097442627\
+Generation 22: Best Individual = data.str.contains('BS') and id >=500000 and category == 'A' and  data.str.contains('Y') and id<1000000 , Fitness = 1.6083619594573975\
+Generation 23: Best Individual = data.str.contains('BS') and id >=500000 and category == 'A' and  data.str.contains('Y') and id<1000000 , Fitness = 1.6242401599884033\
+Generation 24: Best Individual = data.str.contains('BS') and id >=500000 and category == 'A' and id<1000000  and  data.str.contains('Y'), Fitness = 1.6194560527801514\
+Generation 25: Best Individual =  data.str.contains('Y') and id >=500000 and category == 'A' and data.str.contains('BS') and id<1000000 , Fitness = 1.6105101108551025\
+Generation 26: Best Individual = id<1000000  and  data.str.contains('Y') and data.str.contains('BS') and category == 'A' and id >=500000, Fitness = 1.6268799304962158\
+Generation 27: Best Individual = id<1000000  and data.str.contains('BS') and category == 'A' and id >=500000 and  data.str.contains('Y'), Fitness = 1.4717638492584229\
+Generation 28: Best Individual = id<1000000  and category == 'A' and id >=500000 and data.str.contains('BS') and  data.str.contains('Y'), Fitness = 1.6019847393035889\
+Generation 29: Best Individual = id<1000000  and category == 'A' and id >=500000 and data.str.contains('BS') and  data.str.contains('Y'), Fitness = 1.6145899295806885\
+Generation 30: Best Individual = id >=500000 and category == 'A' and  data.str.contains('Y') and data.str.contains('BS') and id<1000000 , Fitness = 1.6604371070861816\
+Generation 31: Best Individual = id<1000000  and data.str.contains('BS') and category == 'A' and id >=500000 and  data.str.contains('Y'), Fitness = 1.5351910591125488\
+Generation 32: Best Individual = category == 'A' and id<1000000  and data.str.contains('BS') and id >=500000 and  data.str.contains('Y'), Fitness = 1.604292869567871\
+Generation 33: Best Individual = category == 'A' and id<1000000  and data.str.contains('BS') and id >=500000 and  data.str.contains('Y'), Fitness = 1.4944629669189453\
+Generation 34: Best Individual = data.str.contains('BS') and category == 'A' and id<1000000  and id >=500000 and  data.str.contains('Y'), Fitness = 1.6035521030426025\
+Generation 35: Best Individual =  data.str.contains('Y') and category == 'A' and id<1000000  and data.str.contains('BS') and id >=500000, Fitness = 1.5851619243621826\
+Generation 36: Best Individual =  data.str.contains('Y') and category == 'A' and id<1000000  and data.str.contains('BS') and id >=500000, Fitness = 1.6110618114471436\
+Generation 37: Best Individual = category == 'A' and data.str.contains('BS') and  data.str.contains('Y') and id<1000000  and id >=500000, Fitness = 1.624098777770996\
+Generation 38: Best Individual = data.str.contains('BS') and  data.str.contains('Y') and id<1000000  and category == 'A' and id >=500000, Fitness = 1.5106239318847656\
+Generation 39: Best Individual = data.str.contains('BS') and id<1000000  and category == 'A' and  data.str.contains('Y') and id >=500000, Fitness = 1.369368076324463\
+Generation 40: Best Individual = data.str.contains('BS') and id<1000000  and category == 'A' and  data.str.contains('Y') and id >=500000, Fitness = 1.423536777496338\
+Generation 41: Best Individual = category == 'A' and data.str.contains('BS') and id<1000000  and  data.str.contains('Y') and id >=500000, Fitness = 1.4374699592590332\
+Generation 42: Best Individual =  data.str.contains('Y') and category == 'A' and data.str.contains('BS') and id<1000000  and id >=500000, Fitness = 1.2870399951934814\
+Generation 43: Best Individual =  data.str.contains('Y') and data.str.contains('BS') and category == 'A' and id<1000000  and id >=500000, Fitness = 1.3957369327545166\
+Generation 44: Best Individual = id >=500000 and  data.str.contains('Y') and data.str.contains('BS') and category == 'A' and id<1000000 , Fitness = 1.4749691486358643\
+Generation 45: Best Individual =  data.str.contains('Y') and data.str.contains('BS') and id >=500000 and id<1000000  and category == 'A', Fitness = 1.3195161819458008\
+Generation 46: Best Individual = id >=500000 and  data.str.contains('Y') and data.str.contains('BS') and id<1000000  and category == 'A', Fitness = 1.5193750858306885\
+Generation 47: Best Individual =  data.str.contains('Y') and id >=500000 and data.str.contains('BS') and category == 'A' and id<1000000 , Fitness = 1.4942710399627686\
+Generation 48: Best Individual = id<1000000  and id >=500000 and data.str.contains('BS') and category == 'A' and  data.str.contains('Y'), Fitness = 1.5840048789978027\
+Generation 49: Best Individual = id >=500000 and  data.str.contains('Y') and data.str.contains('BS') and category == 'A' and id<1000000 , Fitness = 1.4492278099060059\
+Generation 50: Best Individual = id >=500000 and  data.str.contains('Y') and data.str.contains('BS') and category == 'A' and id<1000000 , Fitness = 1.398474931716919\
+Optimized Query: id >=500000 and  data.str.contains('Y') and data.str.contains('BS') and category == 'A' and id<1000000 \
+Node 1 Simulated Query Time: 690.5269999999999 seconds\
+Node 1 Query Result Sample:\
+           id                                               data category\
+50002  500020  ZSBGE16TF4VT3I0CERGOZ2I7591KTGPEDS4B4OAT8RJWEO...        A\
+50013  500130  5AQZ2K5WEUKL8CRD3KEKT666ASMU2NIAMZRUC33X005C9F...        A\
+50015  500150  QFBV3I9NBM396C4BMT7XALTWTTUC73YD0GPX5NN2NVZHYI...        A\
+50019  500190  DXMLFUGCSXJ020VP9HK003SXT7R3LPJVNEPJA8KO2XIFBJ...        A\
+50028  500280  CI98JU24ZOVE4C22ZNLSGW2EZUZBA6MWU1U19T64TJM1Y5...        A\
+Node 2 Simulated Query Time: 696.3899999999999 seconds\
+Node 2 Query Result Sample:\
+           id                                               data category\
+50015  500151  DVMQMMLGUO7HKI2LHODT7EX9JTWMXB6UHRC5513V5ENPAL...        A\
+50018  500181  XVMH7L2OX4M749060YGNOWCX8ALCLTUAZNLMPBBZCVB6ZD...        A\
+50037  500371  5EV9BQ7095QJXAYVAP50EFEM4E41Y3WHG4QS33WWG7ZTLL...        A\
+50082  500821  EGZLX8R1HHG68EWWPF8OYIH9XQH5VPO39ABGOX2H8ZTQG0...        A\
+50084  500841  FFLMLBI1S5HW9W3PHE6QFGF39SF05N0KW7W5OWQCZWNIE7...        A\
+Node 3 Simulated Query Time: 700.901 seconds\
+Node 3 Query Result Sample:\
+           id                                               data category\
+50002  500022  MFYRQK62WTLJZYPS630T81WCZL819SGL9DNL692ETJVFGR...        A\
+50016  500162  PMDEA3BYDOXXA6W8T3545CML8JNW694NYWNQD7CV5886G2...        A\
+50025  500252  YDU3OHNBA3J1U8D1JWP5TMWR6ZWUKLBBH9P6V1R3G0CKGA...        A\
+50028  500282  TJ80OMO4SMREOB496XWHZ68PVAKGYPUC5HAJAVLA5V2FYZ...        A\
+50038  500382  299YV27LRSF1PGWN8SANP5OELNMT0CN4FMWGQY67SZUYO8...        A\
+Node 4 Simulated Query Time: 707.3090000000001 seconds\
+Node 4 Query Result Sample:\
+           id                                               data category\
+50007  500073  ZGVPFJ17GYNQWPTNB5XQOQLC6USSZU1T9F4A2EREWEDQ7B...        A\
+50025  500253  KFLHKJX0NV3TQZ7A02KIY9X55BJ2GO5PVPK6ASKTKULXDJ...        A\
+50043  500433  TSMJE92R1VPP8UK35PP072KRJ8HS5Z3NRQRXOMGYH0ZRCW...        A\
+50046  500463  EXA8NHOPB7X6X8D200RMASYO0HFYNX4GQ8E48Y59DRPCIL...        A\
+50070  500703  0ZT62B66392YL1XILBJWOSH56UW1IFX0FFJU7M7H6PTDDC...        A\
+Node 5 Simulated Query Time: 711.7199999999999 seconds\
+Node 5 Query Result Sample:\
+           id                                               data category\
+50009  500094  4Y3VTK11AKJQHV8WWFI8FMYM536N7CUE964B3SMHQUTGZ0...        A\
+50010  500104  7F80B602WE3MTKZ9C7SM5NVF1CRJHJU9POK7KBBSPSE02Y...        A\
+50023  500234  V0WFBF09TMVFSQR3AT4JWPC4HF16QRAR87A3TXMX6VF4CQ...        A\
+50026  500264  C2IPA6LKF1KODA9YKMLCIYI2EKBMPKAK38CKL4X2NUEGQB...        A\
+50034  500344  MLB2R0L4C6IHQ81HOTVKMNCY9I4WHS6D1JOKHFVUSFAER5...        A\
+Node 6 Simulated Query Time: 717.9560000000001 seconds\
+Node 6 Query Result Sample:\
+           id                                               data category\
+50000  500005  HPQWZW545EWQ14CLVEA2E8V4CBI15HFUHLHNMLPFUCDRAX...        A\
+50004  500045  9URILZE9IPDR57HN5U4I8GGQ20TSG711W3L0MAVXXOG4S0...        A\
+50007  500075  6A9S56DW800RVJ8GVG59KZ3WXI5JGLZ1UNT317OIFCRIAD...        A\
+50015  500155  FC9YAP454EN86P1SKI1LKSMQH0K65PWZWOGB8G6PF3EKE7...        A\
+50016  500165  I5X1YWEI9AF2EOWR5PRTNKG6UOP2CIU70AE0UZYC8IOQXL...        A\
+Node 7 Simulated Query Time: 723.845 seconds\
+Node 7 Query Result Sample:\
+           id                                               data category\
+50012  500126  CRR3BR3P19LD2Z94TPD2IT0I5T4HQA6GCUG8TEAXWES9XN...        A\
+50013  500136  5CLQVXXIOE6A3VEVAFRDB4ZRG163KHNUMP3MG1EMS4Q4IQ...        A\
+50015  500156  3CENU0RNAVGCVTNY6AALDFQDB7T1NSV9HUBWM57XKEY178...        A\
+50020  500206  WJQ0ADCIUQNB07PQTBSVRYKP43YK9NS65THU1W86S6EM8G...        A\
+50035  500356  Y0C5BW7E5BK87HTIQD7JYP05SMYTWJ5D870I71SGJJYE1K...        A\
+Node 8 Simulated Query Time: 728.178 seconds\
+Node 8 Query Result Sample:\
+           id                                               data category\
+50002  500027  D76OJS43J6NNVPTZ00TV2TQBKT78VV83OYMIPS8IYXXV2X...        A\
+50004  500047  5R1KAE1V2AE9UWSZY503U0I68Q6C8JV0I6PW62HQ9V5UJH...        A\
+50014  500147  N4JPR1YPKPLQTFVCFOWYJRPQXUDO0MSH7JFB2KUPEJ5MRB...        A\
+50027  500277  0KS431VKYH87F9FU2PUOXNJNVYXH1V9UIW3WOV0Q35WQKW...        A\
+50028  500287  F591FUV9PYQWGU77T5I6DYR3LH3WRJYKRP0VPR68STO9ZA...        A\
+Node 9 Simulated Query Time: 733.479 seconds\
+Node 9 Query Result Sample:\
+           id                                               data category\
+50000  500008  JW06AESPQT4WSOE1Z1JZ36T100UG0QKJYLJO18MKKOK79M...        A\
+50001  500018  QFV1KLB0JWTK9G5CG9VW1LDYVQ2RB6Y321K3EQ4YMHHCRW...        A\
+50004  500048  SBXKJHOJDTX5UPCD54M9HTQRP0ZJ3EF1Q1QQRS9WEFHMY2...        A\
+50023  500238  HQX5OH6YSBEPJWPW91HN3OQR8NGTA4TP2WRNOJUGP2KMP7...        A\
+50025  500258  F6Y9UUHEYP6SSCKEC0H54PHPRXUXNF0W8IVM5IUX3TQ32Z...        A\
+Node 10 Simulated Query Time: 738.1980000000001 seconds\
+Node 10 Query Result Sample:\
+           id                                               data category\
+50018  500189  1VRTD7J9RFTFXWHAFJ4378HXP1KLVE89HPFSMZ9074UQEP...        A\
+50023  500239  X7I5ISMYHH1RA27LV4LGLEZCL24KMQPHU565VF84LVA4TQ...        A\
+50040  500409  Q4G1XMZZBXLN3LIZM1ZND3NXE0ELKJOF4K7JPXZNRV993Y...        A\
+50042  500429  SORNUOK82JO5TD69RS89FZP1F3BPEBDX0ZO62FH77D101S...        A\
+50070  500709  AC0XSH5ZVL12SG1MV6MNLFD4Y8GEEMLTKO2GTUN7JNCZY3...        A\
+Optimization Time: 1521.7948069572449 seconds\
+Total Simulated Query Time: 7148.503000000001 seconds\
+GA Performance Metrics: \{'Optimization Time': 1521.7948069572449, 'Query Execution Time': 7148.503000000001\}\
+\
+Running GAN Optimizer...\
+\
+Original Query:  data.str.contains('Y') and category == 'A' and data.str.contains('BS') and id >=500000 and id<1000000 \
+Epoch 0/1000, D Loss: inf, G Loss: nan\
+Epoch 100/1000, D Loss: nan, G Loss: nan\
+Epoch 200/1000, D Loss: nan, G Loss: nan\
+Epoch 300/1000, D Loss: nan, G Loss: nan\
+Epoch 400/1000, D Loss: nan, G Loss: nan\
+Epoch 500/1000, D Loss: nan, G Loss: nan\
+Epoch 600/1000, D Loss: nan, G Loss: nan\
+Epoch 700/1000, D Loss: nan, G Loss: nan\
+Epoch 800/1000, D Loss: nan, G Loss: nan\
+Epoch 900/1000, D Loss: nan, G Loss: nan\
+Optimized Query: id >=500000 and category == 'A' and id<1000000  and data.str.contains('BS') and  data.str.contains('Y')\
+Node 1 Simulated Query Time: 342.664 seconds\
+Node 1 Query Result Sample:\
+           id                                               data category\
+50002  500020  ZSBGE16TF4VT3I0CERGOZ2I7591KTGPEDS4B4OAT8RJWEO...        A\
+50013  500130  5AQZ2K5WEUKL8CRD3KEKT666ASMU2NIAMZRUC33X005C9F...        A\
+50015  500150  QFBV3I9NBM396C4BMT7XALTWTTUC73YD0GPX5NN2NVZHYI...        A\
+50019  500190  DXMLFUGCSXJ020VP9HK003SXT7R3LPJVNEPJA8KO2XIFBJ...        A\
+50028  500280  CI98JU24ZOVE4C22ZNLSGW2EZUZBA6MWU1U19T64TJM1Y5...        A\
+Node 2 Simulated Query Time: 347.65500000000003 seconds\
+Node 2 Query Result Sample:\
+           id                                               data category\
+50015  500151  DVMQMMLGUO7HKI2LHODT7EX9JTWMXB6UHRC5513V5ENPAL...        A\
+50018  500181  XVMH7L2OX4M749060YGNOWCX8ALCLTUAZNLMPBBZCVB6ZD...        A\
+50037  500371  5EV9BQ7095QJXAYVAP50EFEM4E41Y3WHG4QS33WWG7ZTLL...        A\
+50082  500821  EGZLX8R1HHG68EWWPF8OYIH9XQH5VPO39ABGOX2H8ZTQG0...        A\
+50084  500841  FFLMLBI1S5HW9W3PHE6QFGF39SF05N0KW7W5OWQCZWNIE7...        A\
+Node 3 Simulated Query Time: 350.666 seconds\
+Node 3 Query Result Sample:\
+           id                                               data category\
+50002  500022  MFYRQK62WTLJZYPS630T81WCZL819SGL9DNL692ETJVFGR...        A\
+50016  500162  PMDEA3BYDOXXA6W8T3545CML8JNW694NYWNQD7CV5886G2...        A\
+50025  500252  YDU3OHNBA3J1U8D1JWP5TMWR6ZWUKLBBH9P6V1R3G0CKGA...        A\
+50028  500282  TJ80OMO4SMREOB496XWHZ68PVAKGYPUC5HAJAVLA5V2FYZ...        A\
+50038  500382  299YV27LRSF1PGWN8SANP5OELNMT0CN4FMWGQY67SZUYO8...        A\
+Node 4 Simulated Query Time: 357.54999999999995 seconds\
+Node 4 Query Result Sample:\
+           id                                               data category\
+50007  500073  ZGVPFJ17GYNQWPTNB5XQOQLC6USSZU1T9F4A2EREWEDQ7B...        A\
+50025  500253  KFLHKJX0NV3TQZ7A02KIY9X55BJ2GO5PVPK6ASKTKULXDJ...        A\
+50043  500433  TSMJE92R1VPP8UK35PP072KRJ8HS5Z3NRQRXOMGYH0ZRCW...        A\
+50046  500463  EXA8NHOPB7X6X8D200RMASYO0HFYNX4GQ8E48Y59DRPCIL...        A\
+50070  500703  0ZT62B66392YL1XILBJWOSH56UW1IFX0FFJU7M7H6PTDDC...        A\
+Node 5 Simulated Query Time: 362.56199999999995 seconds\
+Node 5 Query Result Sample:\
+           id                                               data category\
+50009  500094  4Y3VTK11AKJQHV8WWFI8FMYM536N7CUE964B3SMHQUTGZ0...        A\
+50010  500104  7F80B602WE3MTKZ9C7SM5NVF1CRJHJU9POK7KBBSPSE02Y...        A\
+50023  500234  V0WFBF09TMVFSQR3AT4JWPC4HF16QRAR87A3TXMX6VF4CQ...        A\
+50026  500264  C2IPA6LKF1KODA9YKMLCIYI2EKBMPKAK38CKL4X2NUEGQB...        A\
+50034  500344  MLB2R0L4C6IHQ81HOTVKMNCY9I4WHS6D1JOKHFVUSFAER5...        A\
+Node 6 Simulated Query Time: 370.592 seconds\
+Node 6 Query Result Sample:\
+           id                                               data category\
+50000  500005  HPQWZW545EWQ14CLVEA2E8V4CBI15HFUHLHNMLPFUCDRAX...        A\
+50004  500045  9URILZE9IPDR57HN5U4I8GGQ20TSG711W3L0MAVXXOG4S0...        A\
+50007  500075  6A9S56DW800RVJ8GVG59KZ3WXI5JGLZ1UNT317OIFCRIAD...        A\
+50015  500155  FC9YAP454EN86P1SKI1LKSMQH0K65PWZWOGB8G6PF3EKE7...        A\
+50016  500165  I5X1YWEI9AF2EOWR5PRTNKG6UOP2CIU70AE0UZYC8IOQXL...        A\
+Node 7 Simulated Query Time: 376.078 seconds\
+Node 7 Query Result Sample:\
+           id                                               data category\
+50012  500126  CRR3BR3P19LD2Z94TPD2IT0I5T4HQA6GCUG8TEAXWES9XN...        A\
+50013  500136  5CLQVXXIOE6A3VEVAFRDB4ZRG163KHNUMP3MG1EMS4Q4IQ...        A\
+50015  500156  3CENU0RNAVGCVTNY6AALDFQDB7T1NSV9HUBWM57XKEY178...        A\
+50020  500206  WJQ0ADCIUQNB07PQTBSVRYKP43YK9NS65THU1W86S6EM8G...        A\
+50035  500356  Y0C5BW7E5BK87HTIQD7JYP05SMYTWJ5D870I71SGJJYE1K...        A\
+Node 8 Simulated Query Time: 380.00399999999996 seconds\
+Node 8 Query Result Sample:\
+           id                                               data category\
+50002  500027  D76OJS43J6NNVPTZ00TV2TQBKT78VV83OYMIPS8IYXXV2X...        A\
+50004  500047  5R1KAE1V2AE9UWSZY503U0I68Q6C8JV0I6PW62HQ9V5UJH...        A\
+50014  500147  N4JPR1YPKPLQTFVCFOWYJRPQXUDO0MSH7JFB2KUPEJ5MRB...        A\
+50027  500277  0KS431VKYH87F9FU2PUOXNJNVYXH1V9UIW3WOV0Q35WQKW...        A\
+50028  500287  F591FUV9PYQWGU77T5I6DYR3LH3WRJYKRP0VPR68STO9ZA...        A\
+Node 9 Simulated Query Time: 384.51399999999995 seconds\
+Node 9 Query Result Sample:\
+           id                                               data category\
+50000  500008  JW06AESPQT4WSOE1Z1JZ36T100UG0QKJYLJO18MKKOK79M...        A\
+50001  500018  QFV1KLB0JWTK9G5CG9VW1LDYVQ2RB6Y321K3EQ4YMHHCRW...        A\
+50004  500048  SBXKJHOJDTX5UPCD54M9HTQRP0ZJ3EF1Q1QQRS9WEFHMY2...        A\
+50023  500238  HQX5OH6YSBEPJWPW91HN3OQR8NGTA4TP2WRNOJUGP2KMP7...        A\
+50025  500258  F6Y9UUHEYP6SSCKEC0H54PHPRXUXNF0W8IVM5IUX3TQ32Z...        A\
+Node 10 Simulated Query Time: 388.12300000000005 seconds\
+Node 10 Query Result Sample:\
+           id                                               data category\
+50018  500189  1VRTD7J9RFTFXWHAFJ4378HXP1KLVE89HPFSMZ9074UQEP...        A\
+50023  500239  X7I5ISMYHH1RA27LV4LGLEZCL24KMQPHU565VF84LVA4TQ...        A\
+50040  500409  Q4G1XMZZBXLN3LIZM1ZND3NXE0ELKJOF4K7JPXZNRV993Y...        A\
+50042  500429  SORNUOK82JO5TD69RS89FZP1F3BPEBDX0ZO62FH77D101S...        A\
+50070  500709  AC0XSH5ZVL12SG1MV6MNLFD4Y8GEEMLTKO2GTUN7JNCZY3...        A\
+Optimization Time: 2.7599551677703857 seconds\
+Total Simulated Query Time: 3660.408 seconds\
+GAN Performance Metrics: \{'Optimization Time': 2.7599551677703857, 'Query Execution Time': 3660.408\}\
+(base) jiangjiaxudeMacBook-Pro:SettedCost jiangjiaxu$ }

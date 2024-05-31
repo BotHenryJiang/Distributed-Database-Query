@@ -224,7 +224,7 @@ class GeneticAlgorithmOptimizer(Optimizer):
         # 解析查询子语句
         subqueries = query.split(" and ")
         population_size = 10
-        generations = 200
+        generations = 50
         mutation_rate = 0.2  # 增加变异率
 
         def generate_population(size, subqueries):
@@ -279,7 +279,7 @@ class GeneticAlgorithmOptimizer(Optimizer):
 
 
 #GAN优化器
-class Generator(nn.Module):
+"""class Generator(nn.Module):
     def __init__(self, input_dim, output_dim):
         super(Generator, self).__init__()
         self.model = nn.Sequential(
@@ -323,8 +323,8 @@ class GANOptimizer(Optimizer):
         self.discriminator = Discriminator(output_dim).to(self.device)
 
         # 定义优化器
-        g_optimizer = optim.Adam(self.generator.parameters(), lr=0.005)
-        d_optimizer = optim.Adam(self.discriminator.parameters(), lr=0.005)
+        g_optimizer = optim.Adam(self.generator.parameters(), lr=0.01)
+        d_optimizer = optim.Adam(self.discriminator.parameters(), lr=0.01)
 
         # 训练GAN
         self.train_gan(subqueries, g_optimizer, d_optimizer)
@@ -375,7 +375,108 @@ class GANOptimizer(Optimizer):
             optimized_order = self.generator(real_data).cpu().numpy().argsort()
         optimized_subqueries = [subqueries[i] for i in optimized_order]
         return " and ".join(optimized_subqueries)
+"""
 
+# GAN优化器
+class Generator(nn.Module):
+    def __init__(self, input_dim, output_dim, activation_fn):
+        super(Generator, self).__init__()
+        self.model = nn.Sequential(
+            nn.Linear(input_dim, 128),
+            activation_fn(),
+            nn.Linear(128, 256),
+            activation_fn(),
+            nn.Linear(256, output_dim)
+        )
+
+    def forward(self, x):
+        return self.model(x)
+
+class Discriminator(nn.Module):
+    def __init__(self, output_dim, activation_fn):
+        super(Discriminator, self).__init__()
+        self.model = nn.Sequential(
+            nn.Linear(output_dim, 128),
+            activation_fn(),
+            nn.Linear(128, 1),
+            nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        return self.model(x)
+
+class GANOptimizer(Optimizer):
+    def __init__(self, all_data, learning_rate_g=0.01, learning_rate_d=0.01, activation_fn=nn.LeakyReLU):
+        self.all_data = all_data
+        self.generator = None
+        self.discriminator = None
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.learning_rate_g = learning_rate_g
+        self.learning_rate_d = learning_rate_d
+        self.activation_fn = activation_fn
+
+    def optimize(self, query):
+        subqueries = query.split(" and ")
+        input_dim = len(subqueries)
+        output_dim = len(subqueries)
+
+        # 初始化生成器和判别器
+        self.generator = Generator(input_dim, output_dim, self.activation_fn).to(self.device)
+        self.discriminator = Discriminator(output_dim, self.activation_fn).to(self.device)
+
+        # 定义优化器
+        g_optimizer = optim.Adam(self.generator.parameters(), lr=self.learning_rate_g)
+        d_optimizer = optim.Adam(self.discriminator.parameters(), lr=self.learning_rate_d)
+
+        # 训练GAN
+        self.train_gan(subqueries, g_optimizer, d_optimizer)
+
+        # 使用训练好的生成器生成优化后的查询顺序
+        optimized_query = self.generate_optimized_query(subqueries)
+
+        return optimized_query
+
+    def train_gan(self, subqueries, g_optimizer, d_optimizer, epochs=1000):
+        for epoch in range(epochs):
+            # 生成器生成查询顺序
+            real_data = torch.FloatTensor([i for i in range(len(subqueries))]).to(self.device)
+            fake_data = self.generator(real_data)
+
+            # 计算生成顺序的代价
+            cost = self.query_cost(fake_data, subqueries)
+
+            # 训练判别器
+            d_optimizer.zero_grad()
+            fake_output = self.discriminator(cost)
+            d_loss = -torch.mean(torch.log(1.0 - fake_output))
+            d_loss.backward()
+            d_optimizer.step()
+
+            # 训练生成器
+            g_optimizer.zero_grad()
+            fake_data = self.generator(real_data)
+            fake_output = self.discriminator(self.query_cost(fake_data, subqueries))
+            g_loss = -torch.mean(torch.log(fake_output))
+            g_loss.backward()
+            g_optimizer.step()
+
+            if epoch % 100 == 0:
+                print(f"Epoch {epoch}/{epochs}, D Loss: {d_loss.item()}, G Loss: {g_loss.item()}")
+
+    def query_cost(self, fake_data, subqueries):
+        # 将张量从计算图中分离出来，防止梯度计算错误
+        indices = fake_data.detach().cpu().numpy().argsort()
+        sorted_subqueries = [subqueries[i] for i in indices]
+        cost = sum(len(sq) for sq in sorted_subqueries)  # 假设代价是查询长度的总和
+        cost_tensor = torch.tensor([cost], dtype=torch.float, device=self.device).expand(1, len(subqueries))
+        return cost_tensor
+
+    def generate_optimized_query(self, subqueries):
+        real_data = torch.FloatTensor([i for i in range(len(subqueries))]).to(self.device)
+        with torch.no_grad():
+            optimized_order = self.generator(real_data).cpu().numpy().argsort()
+        optimized_subqueries = [subqueries[i] for i in optimized_order]
+        return " and ".join(optimized_subqueries)
 
 # 加载节点数据
 nodes = []
@@ -393,16 +494,16 @@ query_router = QueryRouter(shard_manager)
 
 # 定义优化器
 optimizers = {
-#    "RBO": RuleBasedOptimizer(),
-#    "CBO": CostBasedOptimizer(),
-#    "DP": DynamicProgrammingOptimizer(),
-#    "GrS": GreedyOptimizer(),
-#    "GA": GeneticAlgorithmOptimizer(all_data), #传递 all_data 给遗传算法优化器
+    "RBO": RuleBasedOptimizer(),
+    "CBO": CostBasedOptimizer(),
+    "DP": DynamicProgrammingOptimizer(),
+    "GrS": GreedyOptimizer(),
+    "GA": GeneticAlgorithmOptimizer(all_data), #传递 all_data 给遗传算法优化器
     "GAN": GANOptimizer(all_data)
 }
 
 # 测试和比较不同优化器的性能
-query = " data.str.contains('X') and category == 'B' and data.str.contains('AZ') and id >=500000 and id<800000 "
+query = " data.str.contains('Y') and category == 'A' and data.str.contains('BS') and id >=500000 and id<1000000 "
 
 for name, optimizer in optimizers.items():
     print(f"\nRunning {name} Optimizer...")
