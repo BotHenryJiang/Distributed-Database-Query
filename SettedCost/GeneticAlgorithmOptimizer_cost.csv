@@ -1,0 +1,6 @@
+Optimizer,Optimized Query,Cost
+GeneticAlgorithmOptimizer,id < 100 and category == 'A',3199.746
+GeneticAlgorithmOptimizer,data.str.contains('S') and category == 'A' and data.str.contains('X') and id >=500000 and id<700000,8760.005000000001
+GeneticAlgorithmOptimizer,category == 'B' and data.str.contains('AFG'),4023.1450000000004
+GeneticAlgorithmOptimizer,id >= 75 and category == 'C' and data.str.contains('AFG'),5110.587
+GeneticAlgorithmOptimizer,id >= 150 and id <750000 and data.str.contains('G') and category == 'F' and id <=650000 and data.str.contains('AB'),9940.831

@@ -1,0 +1,6 @@
+Optimizer,Optimized Query,Cost
+RuleBasedOptimizer,id < 100 and category == 'A',1000.41
+RuleBasedOptimizer,data.str.contains('S') and category == 'A' and data.str.contains('X') and id >=500000 and id<700000,3920.3109999999997
+RuleBasedOptimizer,category == 'B' and data.str.contains('AFG'),4023.1450000000004
+RuleBasedOptimizer,id >= 75 and category == 'C' and data.str.contains('AFG'),5027.282
+RuleBasedOptimizer,id >= 150 and id <750000 and data.str.contains('G') and category == 'F' and id <=650000 and data.str.contains('AB'),4249.400000000001

@@ -1,0 +1,6 @@
+Optimizer,Optimized Query,Cost
+CostBasedOptimizer,id < 100 and category == 'A',1000.41
+CostBasedOptimizer,data.str.contains('S') and category == 'A' and data.str.contains('X') and id >=500000 and id<700000,9518.280999999999
+CostBasedOptimizer,category == 'B' and data.str.contains('AFG'),4023.1450000000004
+CostBasedOptimizer,id >= 75 and category == 'C' and data.str.contains('AFG'),5027.282
+CostBasedOptimizer,id >= 150 and id <750000 and data.str.contains('G') and category == 'F' and id <=650000 and data.str.contains('AB'),7998.65
