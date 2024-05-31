@@ -1,0 +1,2 @@
+generation,best_query,cost
+10,data.str.contains('AZ') and id<800000 and id >=500000 and category == 'B' and data.str.contains('X'),31776
