@@ -1,0 +1,1 @@
+This is a python based distributed database query simulator. Implemented 6 different query optimization methods/algorithms for a 10-node simulated distributed database. Main files in SettedCost folder, use database_set up to generate the data base, then run multiple_queries.py to compare different algorithms.
